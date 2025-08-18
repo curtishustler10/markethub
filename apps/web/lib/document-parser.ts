@@ -113,7 +113,8 @@ export class DocumentParser {
     for (const pattern of datePatterns) {
       const match = dateStr.match(pattern)
       if (match) {
-        let [, part1, part2, year] = match
+        const [, part1, part2, yearPart] = match
+        let year = yearPart
         
         // Convert 2-digit year to 4-digit
         if (year.length === 2) {

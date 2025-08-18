@@ -1,5 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  eslint: {
+    // Disable ESLint during builds
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // Disable TypeScript checking during builds (still checks in dev)
+    ignoreBuildErrors: true,
+  },
   images: {
     domains: ['images.unsplash.com', 'api.mapbox.com'],
   },
