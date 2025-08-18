@@ -15,14 +15,14 @@ const nextConfig = {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
   webpack: (config, { isServer }) => {
-    if (!isServer) {
-      // Fix for pdf-parse worker issues
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        path: false,
-        crypto: false,
-      }
+    // Fix for pdf-parse and Node.js modules in client bundle
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      path: false,
+      crypto: false,
+      stream: false,
+      canvas: false,
     }
     
     // Ignore PDF worker files to prevent webpack parsing errors
@@ -33,6 +33,21 @@ const nextConfig = {
         filename: 'static/worker/[hash][ext][query]'
       }
     })
+    
+    // Exclude pdf-parse completely from client bundle - only use on server
+    if (!isServer) {
+      config.externals = config.externals || []
+      config.externals.push('pdf-parse')
+    }
+    
+    // Ignore test files from pdf-parse package
+    const webpack = require('webpack')
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /test\/data\/.*\.pdf$/,
+        contextRegExp: /pdf-parse/,
+      })
+    )
     
     return config
   },
