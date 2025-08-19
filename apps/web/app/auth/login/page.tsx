@@ -37,7 +37,30 @@ function LoginForm() {
         throw error
       }
 
-      router.push(next)
+      // Get user profile to determine redirect
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single()
+
+        if (profile) {
+          // Redirect based on role if going to default route
+          let redirectPath = next
+          if (next === '/') {
+            redirectPath = profile.role === 'market_organizer' || profile.role === 'admin' 
+              ? '/organizer/dashboard' 
+              : '/vendor/browse'
+          }
+          router.push(redirectPath)
+        } else {
+          router.push(next)
+        }
+      } else {
+        router.push(next)
+      }
     } catch (error: any) {
       toast({
         title: "Error",
