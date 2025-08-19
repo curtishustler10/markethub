@@ -7,7 +7,13 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/'
 
-  console.log('Auth callback hit:', { code: !!code, next, origin })
+  console.log('🔐 Auth callback hit:', { 
+    hasCode: !!code, 
+    next, 
+    origin,
+    fullUrl: request.url,
+    timestamp: new Date().toISOString()
+  })
 
   if (code) {
     const supabase = createClient()
@@ -23,12 +29,25 @@ export async function GET(request: NextRequest) {
         .eq('id', data.user.id)
         .maybeSingle()
         
-      console.log('Profile check:', { exists: !!existingProfile, role: existingProfile?.role, error: profileFetchError?.message })
+      console.log('🔍 Profile check:', { 
+        exists: !!existingProfile, 
+        role: existingProfile?.role, 
+        profileId: existingProfile?.id,
+        userId: data.user.id,
+        error: profileFetchError?.message,
+        errorCode: profileFetchError?.code
+      })
         
       if (!existingProfile) {
         // Create profile from user metadata
         const metadata = data.user.user_metadata || {}
-        console.log('Creating profile with metadata:', { name: metadata.name, role: metadata.role })
+        console.log('👤 Creating profile with metadata:', { 
+          name: metadata.name, 
+          role: metadata.role,
+          userId: data.user.id,
+          userEmail: data.user.email,
+          fullMetadata: metadata
+        })
         
         try {
           await createUserProfile(
@@ -45,7 +64,11 @@ export async function GET(request: NextRequest) {
             .eq('id', data.user.id)
             .maybeSingle()
             
-          console.log('Profile created with role:', newProfile?.role)
+          console.log('✅ Profile created with role:', {
+            role: newProfile?.role,
+            profileId: newProfile?.id || data.user.id,
+            success: !!newProfile
+          })
         } catch (createError) {
           console.error('Error creating profile:', createError)
           return NextResponse.redirect(`${origin}/auth/auth-code-error`)
@@ -59,7 +82,13 @@ export async function GET(request: NextRequest) {
         .eq('id', data.user.id)
         .maybeSingle()
         
-      console.log('Final profile for redirect:', { role: profile?.role, error: roleError?.message })
+      console.log('🎯 Final profile for redirect:', { 
+        role: profile?.role, 
+        profileExists: !!profile,
+        error: roleError?.message,
+        errorCode: roleError?.code,
+        nextParam: next
+      })
         
       if (profile) {
         let redirectPath = next
@@ -70,7 +99,12 @@ export async function GET(request: NextRequest) {
             : '/vendor/browse'
         }
         
-        console.log('Redirecting to:', redirectPath)
+        console.log('🚀 Redirecting to:', {
+          originalNext: next,
+          calculatedPath: redirectPath,
+          userRole: profile.role,
+          fullRedirectUrl: `${origin}${redirectPath}`
+        })
         return NextResponse.redirect(`${origin}${redirectPath}`)
       } else {
         console.error('No profile found after creation attempt')
