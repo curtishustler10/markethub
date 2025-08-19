@@ -38,13 +38,18 @@ function LoginForm() {
       }
 
       // Get user profile to determine redirect
+      console.log('Login successful, getting user profile...')
       const { data: { user } } = await supabase.auth.getUser()
+      console.log('User data:', { id: user?.id, email: user?.email })
+      
       if (user) {
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('role')
           .eq('id', user.id)
           .single()
+
+        console.log('Profile data:', { role: profile?.role, error: profileError?.message })
 
         if (profile) {
           // Redirect based on role if going to default route
@@ -54,11 +59,14 @@ function LoginForm() {
               ? '/organizer/dashboard' 
               : '/vendor/browse'
           }
+          console.log('Redirecting to:', redirectPath)
           router.push(redirectPath)
         } else {
+          console.log('No profile found, redirecting to:', next)
           router.push(next)
         }
       } else {
+        console.log('No user found, redirecting to:', next)
         router.push(next)
       }
     } catch (error: any) {
