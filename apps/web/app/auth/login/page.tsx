@@ -47,7 +47,7 @@ function LoginForm() {
           .from('profiles')
           .select('role')
           .eq('id', user.id)
-          .single()
+          .maybeSingle()
 
         console.log('Profile data:', { role: profile?.role, error: profileError?.message })
 

@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
         .from('profiles')
         .select('id, role')
         .eq('id', data.user.id)
-        .single()
+        .maybeSingle()
         
       console.log('Profile check:', { exists: !!existingProfile, role: existingProfile?.role, error: profileFetchError?.message })
         
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
             .from('profiles')
             .select('role')
             .eq('id', data.user.id)
-            .single()
+            .maybeSingle()
             
           console.log('Profile created with role:', newProfile?.role)
         } catch (createError) {
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
         .from('profiles')
         .select('role')
         .eq('id', data.user.id)
-        .single()
+        .maybeSingle()
         
       console.log('Final profile for redirect:', { role: profile?.role, error: roleError?.message })
         
