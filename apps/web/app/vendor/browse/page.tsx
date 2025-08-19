@@ -5,9 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { MapPin, Search, Calendar, ExternalLink } from 'lucide-react'
+import { MapPin, Search, Calendar, ExternalLink, LogOut } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/components/ui/use-toast'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 interface Market {
@@ -31,6 +32,7 @@ export default function VendorBrowsePage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [profile, setProfile] = useState<any>(null)
   const { toast } = useToast()
+  const router = useRouter()
 
   useEffect(() => {
     loadProfileAndMarkets()
@@ -127,6 +129,20 @@ export default function VendorBrowsePage() {
     return new Date(dateString).toLocaleDateString()
   }
 
+  const handleLogout = async () => {
+    try {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+      router.push('/')
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to sign out. Please try again.",
+        variant: "destructive",
+      })
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -149,12 +165,23 @@ export default function VendorBrowsePage() {
               <p className="text-gray-600">Find and apply to local farmers markets</p>
             </div>
             <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-600">
+                Welcome, {profile?.name}
+              </span>
               <Link href="/vendor/applications">
                 <Button variant="outline">My Applications</Button>
               </Link>
               <Link href="/vendor/profile">
                 <Button>Profile</Button>
               </Link>
+              <Button 
+                variant="outline" 
+                onClick={handleLogout}
+                className="text-gray-600 hover:text-red-600"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
             </div>
           </div>
         </div>
