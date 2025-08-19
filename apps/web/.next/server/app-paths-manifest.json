@@ -1,0 +1,18 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/(marketing)/markets/page": "app/(marketing)/markets/page.js",
+  "/(marketing)/page": "app/(marketing)/page.js",
+  "/api/markets/[id]/route": "app/api/markets/[id]/route.js",
+  "/api/markets/route": "app/api/markets/route.js",
+  "/api/vendor/applications/route": "app/api/vendor/applications/route.js",
+  "/api/vendor/profile/route": "app/api/vendor/profile/route.js",
+  "/api/documents/upload/route": "app/api/documents/upload/route.js",
+  "/api/cron/expiry-check/route": "app/api/cron/expiry-check/route.js",
+  "/api/vendor/apply/route": "app/api/vendor/apply/route.js",
+  "/auth/login/page": "app/auth/login/page.js",
+  "/auth/callback/route": "app/auth/callback/route.js",
+  "/auth/verify-email/page": "app/auth/verify-email/page.js",
+  "/api/vendor-apps/[id]/decision/route": "app/api/vendor-apps/[id]/decision/route.js",
+  "/auth/register/page": "app/auth/register/page.js",
+  "/api/inngest/route": "app/api/inngest/route.js"
+}

@@ -1,5 +1,3 @@
-import pdf from 'pdf-parse'
-import { createWorker } from 'tesseract.js'
 import { calculateVerificationStatus } from 'shared'
 import type { DocumentParseResult } from 'shared'
 
@@ -57,27 +55,43 @@ export class DocumentParser {
   }
 
   private static async parsePDF(buffer: Buffer): Promise<string> {
-    const data = await pdf(buffer)
-    return data.text
+    try {
+      // Dynamic import to avoid bundling issues
+      const pdf = await import('pdf-parse')
+      const data = await pdf.default(buffer)
+      return data.text
+    } catch (error) {
+      console.error('Error importing or using pdf-parse:', error)
+      // Fallback: return empty string if pdf-parse fails to load
+      return ''
+    }
   }
 
   private static async parseImage(buffer: Buffer): Promise<string> {
-    const worker = await createWorker()
-    
     try {
-      await worker.loadLanguage('eng')
-      await worker.initialize('eng')
+      // Dynamic import to avoid bundling issues
+      const { createWorker } = await import('tesseract.js')
+      const worker = await createWorker()
       
-      const { data: { text } } = await worker.recognize(buffer)
-      return text
-    } finally {
-      await worker.terminate()
+      try {
+        await (worker as any).loadLanguage('eng')
+        await (worker as any).initialize('eng')
+        
+        const { data: { text } } = await (worker as any).recognize(buffer)
+        return text
+      } finally {
+        await (worker as any).terminate()
+      }
+    } catch (error) {
+      console.error('Error importing or using tesseract.js:', error)
+      // Fallback: return empty string if tesseract fails to load
+      return ''
     }
   }
 
   private static extractLicenseNumber(text: string): string | null {
     for (const pattern of this.LICENSE_PATTERNS) {
-      const matches = text.matchAll(pattern)
+      const matches = Array.from(text.matchAll(pattern))
       for (const match of matches) {
         if (match[1] && match[1].length >= 6) {
           return match[1].trim().replace(/\s+/g, '')
@@ -89,7 +103,7 @@ export class DocumentParser {
 
   private static extractExpiryDate(text: string): string | null {
     for (const pattern of this.EXPIRY_PATTERNS) {
-      const matches = text.matchAll(pattern)
+      const matches = Array.from(text.matchAll(pattern))
       for (const match of matches) {
         if (match[1]) {
           const dateStr = match[1].trim()

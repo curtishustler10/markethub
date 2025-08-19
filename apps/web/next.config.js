@@ -25,13 +25,10 @@ const nextConfig = {
       canvas: false,
     }
     
-    // Ignore PDF worker files to prevent webpack parsing errors
+    // Completely ignore PDF worker files to prevent webpack parsing errors
     config.module.rules.push({
       test: /pdf\.worker\.(min\.)?js/,
-      type: 'asset/resource',
-      generator: {
-        filename: 'static/worker/[hash][ext][query]'
-      }
+      use: 'null-loader'
     })
     
     // Exclude pdf-parse completely from client bundle - only use on server
@@ -44,8 +41,8 @@ const nextConfig = {
     const webpack = require('webpack')
     config.plugins.push(
       new webpack.IgnorePlugin({
-        resourceRegExp: /test\/data\/.*\.pdf$/,
-        contextRegExp: /pdf-parse/,
+        resourceRegExp: /\.pdf$/,
+        contextRegExp: /node_modules[\/\\]pdf-parse/,
       })
     )
     
