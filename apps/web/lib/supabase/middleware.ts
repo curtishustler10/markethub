@@ -2,6 +2,15 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
+  // Skip middleware for auth callback routes to avoid interference
+  if (request.nextUrl.pathname === '/auth/callback') {
+    console.log('Middleware: Skipping auth callback route')
+    return NextResponse.next()
+  }
+
+  // Log middleware execution for debugging
+  console.log('Middleware running for:', request.nextUrl.pathname)
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
