@@ -4,6 +4,8 @@ import { getCurrentProfile } from '@/lib/auth'
 import { createVendorApplicationSchema } from 'shared'
 import { inngest } from '@/lib/inngest'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const profile = await getCurrentProfile()

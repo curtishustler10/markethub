@@ -4,8 +4,8 @@ export const dynamic = 'force-dynamic'
 // Conditionally create handlers to avoid build-time issues
 let handlers: { GET: any; POST: any; PUT: any }
 
-// Check if we're in build mode (no INNGEST_SIGNING_KEY or NODE_ENV is not production)
-const isBuildTime = !process.env.INNGEST_SIGNING_KEY || process.env.NODE_ENV === 'build'
+// Check if we're in build mode (no INNGEST_SIGNING_KEY)
+const isBuildTime = !process.env.INNGEST_SIGNING_KEY
 
 if (isBuildTime) {
   // Fallback handlers for build time

@@ -4,6 +4,8 @@ import { getCurrentProfile } from '@/lib/auth'
 import { applicationDecisionSchema } from 'shared'
 import { inngest } from '@/lib/inngest'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
