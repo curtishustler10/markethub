@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { MapPin, Search, Filter } from 'lucide-react'
+import { LayoutProvider } from '@/components/providers/layout-provider'
 import type { Market } from 'shared'
 
 export default function MarketsPage() {
@@ -47,34 +48,48 @@ export default function MarketsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">M</span>
+    <LayoutProvider showHeader={true} showFooter={true}>
+      <div className="min-h-screen bg-gray-50">
+
+        {/* Page Header */}
+        <section className="py-12 bg-white border-b">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">Discover Local Markets</h1>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                Find farmers markets, craft fairs, and food festivals in your area. Apply with confidence using your
+                pre-verified documents.
+              </p>
             </div>
-            <span className="text-xl font-bold text-green-600">MarketHub</span>
-          </Link>
-          <nav className="flex items-center space-x-4">
-            <Link href="/auth/login" className="text-gray-600 hover:text-green-600">
-              Sign In
-            </Link>
-            <Button asChild>
-              <Link href="/auth/register">Join MarketHub</Link>
-            </Button>
-          </nav>
-        </div>
-      </header>
+
+            {/* Quick Info Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mx-auto max-w-4xl">
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center">
+                <div className="text-3xl mb-2">🔍</div>
+                <h3 className="font-semibold">Find markets</h3>
+                <p className="text-sm text-gray-600">In a click, find the local markets near you</p>
+              </div>
+
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center">
+                <div className="text-3xl mb-2">📧</div>
+                <h3 className="font-semibold">Apply</h3>
+                <p className="text-sm text-gray-600">Market applications just made easier, send application and get approved</p>
+              </div>
+
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center">
+                <div className="text-3xl mb-2">🫱🏻‍🫲🏾</div>
+                <h3 className="font-semibold">Collaborate</h3>
+                <p className="text-sm text-gray-600">Get seen by event organizer and manage your offers in one platform</p>
+              </div>
+            </div>
+          </div>
+        </section>
 
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Discover Local Markets
-          </h1>
-          <p className="text-gray-600 mb-6">
-            Find the perfect market for your products across Australia
-          </p>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            Available Markets
+          </h2>
 
           <div className="flex flex-col md:flex-row gap-4 mb-6">
             <form onSubmit={handleSearch} className="flex-1">
@@ -202,6 +217,7 @@ export default function MarketsPage() {
           </Button>
         </div>
       </main>
-    </div>
+      </div>
+    </LayoutProvider>
   )
 }

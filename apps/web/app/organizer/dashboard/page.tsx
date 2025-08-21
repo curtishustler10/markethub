@@ -21,6 +21,7 @@ import {
 import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from 'next/navigation'
+import { LayoutProvider } from '@/components/providers/layout-provider'
 import Link from 'next/link'
 
 interface Market {
@@ -227,9 +228,18 @@ export default function OrganizerDashboardPage() {
     )
   }
 
+  const currentUser = profile ? {
+    id: profile.id,
+    name: profile.name,
+    email: profile.email,
+    role: 'organizer' as const,
+    avatar: profile.avatar_url
+  } : null
+
   return (
+    <LayoutProvider showHeader={true} showFooter={false} user={currentUser}>
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Enhanced Header */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
@@ -238,9 +248,6 @@ export default function OrganizerDashboardPage() {
               <p className="text-gray-600">Manage your markets and vendor applications</p>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
-                Welcome, {profile?.name}
-              </span>
               <Link href="/organizer/create-market">
                 <Button>
                   <Plus className="w-4 h-4 mr-2" />
@@ -462,5 +469,6 @@ export default function OrganizerDashboardPage() {
         </Tabs>
       </div>
     </div>
+    </LayoutProvider>
   )
 }

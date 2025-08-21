@@ -1,198 +1,267 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { MapPin, Users, FileCheck, Star } from 'lucide-react'
+import { Card } from '@/components/ui/card'
+import { Users, FileCheck, MapPin, Search } from 'lucide-react'
+import { LayoutProvider } from '@/components/providers/layout-provider'
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">M</span>
-            </div>
-            <span className="text-xl font-bold text-green-600">MarketHub</span>
-          </div>
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/markets" className="text-gray-600 hover:text-green-600">
-              Find Markets
-            </Link>
-            <Link href="/auth/login" className="text-gray-600 hover:text-green-600">
-              Sign In
-            </Link>
-            <Button asChild>
-              <Link href="/auth/register">Get Started</Link>
-            </Button>
-          </nav>
-        </div>
-      </header>
+    <LayoutProvider showHeader={true} showFooter={true}>
+      <div className="min-h-screen bg-background">
 
-      <main>
-        <section className="py-20">
+        {/* Hero Section */}
+        <section className="py-20 bg-gray-50">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-5xl font-bold text-gray-900 mb-6">
-              Connect Local Markets with Quality Vendors
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              MarketHub simplifies vendor management for market organizers and makes it easy for vendors to discover and apply to local markets with pre-verified documents.
-            </p>
+            <h1 className="text-6xl font-bold text-gray-900 mb-4">Stallio.</h1>
+            <p className="text-2xl text-gray-700 mb-12">Find, Connect, Manage.</p>
+
+            <div className="max-w-4xl mx-auto mb-8">
+              <div className="bg-white rounded-full shadow-lg border border-gray-200 p-2 flex items-center">
+                <div className="flex-1 flex">
+                  <div className="flex-1 px-6 py-4 border-r border-gray-200">
+                    <div className="text-left">
+                      <div className="text-sm font-medium text-gray-900 mb-1">Where</div>
+                      <input
+                        type="text"
+                        placeholder="Search in a specific location"
+                        className="w-full text-gray-600 placeholder-gray-400 border-none outline-none bg-transparent"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex-1 px-6 py-4 border-r border-gray-200">
+                    <div className="text-left">
+                      <div className="text-sm font-medium text-gray-900 mb-1">What</div>
+                      <input
+                        type="text"
+                        placeholder="Specific"
+                        className="w-full text-gray-600 placeholder-gray-400 border-none outline-none bg-transparent"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex-1 px-6 py-4">
+                    <div className="text-left">
+                      <div className="text-sm font-medium text-gray-900 mb-1">Check out</div>
+                      <input
+                        type="text"
+                        placeholder="Add dates"
+                        className="w-full text-gray-600 placeholder-gray-400 border-none outline-none bg-transparent"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <Button size="lg" className="bg-green-600 hover:bg-green-700 rounded-full w-14 h-14 p-0 ml-2">
+                  <Search className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild>
-                <Link href="/auth/register?role=market_organizer">
-                  I'm a Market Organizer
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/auth/register?role=vendor">
-                  I'm a Vendor
-                </Link>
-              </Button>
+              <Link href="/auth/register?role=market_organizer">
+                <Button size="lg" className="bg-green-600 hover:bg-green-700 px-8" rounded="full">
+                  I'm an organiser
+                </Button>
+              </Link>
+              <Link href="/auth/register?role=vendor">
+                <Button size="lg" variant="outline" className="px-8 bg-white border-gray-300" rounded="full">
+                  I'm a vendor
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
 
+        {/* Features Section */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-              How MarketHub Works
-            </h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              <Card>
-                <CardHeader>
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                    <Users className="w-6 h-6 text-green-600" />
-                  </div>
-                  <CardTitle>For Market Organizers</CardTitle>
-                  <CardDescription>
-                    Create your market profile, upload required documents, and review vendor applications with confidence.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="text-sm text-gray-600 space-y-2">
-                    <li>• Set up your market profile</li>
-                    <li>• Define vendor requirements</li>
-                    <li>• Review pre-verified applications</li>
-                    <li>• Manage vendor communications</li>
-                  </ul>
-                </CardContent>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Everything you need to manage markets and vendors</h2>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                Streamline your market operations with our comprehensive platform designed for both organizers and
+                vendors.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <MapPin className="w-6 h-6 text-green-600" />
+                  <h3 className="text-lg font-semibold">Market Directory</h3>
+                </div>
+                <p className="text-gray-600">
+                  Discover local markets in your area with detailed information about schedules, locations, and vendor
+                  requirements.
+                </p>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                    <FileCheck className="w-6 h-6 text-green-600" />
-                  </div>
-                  <CardTitle>Document Verification</CardTitle>
-                  <CardDescription>
-                    Automatic verification of licenses, insurance, and compliance documents with expiry tracking.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="text-sm text-gray-600 space-y-2">
-                    <li>• OCR document parsing</li>
-                    <li>• Automatic expiry tracking</li>
-                    <li>• Email notifications</li>
-                    <li>• Compliance monitoring</li>
-                  </ul>
-                </CardContent>
+              <Card className="p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <FileCheck className="w-6 h-6 text-green-600" />
+                  <h3 className="text-lg font-semibold">Document Verification</h3>
+                </div>
+                <p className="text-gray-600">
+                  Automated document parsing and validation for licenses, insurance, and compliance documents with OCR
+                  technology.
+                </p>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                    <MapPin className="w-6 h-6 text-green-600" />
-                  </div>
-                  <CardTitle>For Vendors</CardTitle>
-                  <CardDescription>
-                    Discover local markets, complete your profile once, and apply to multiple markets seamlessly.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="text-sm text-gray-600 space-y-2">
-                    <li>• Find markets near you</li>
-                    <li>• One-time profile setup</li>
-                    <li>• Quick market applications</li>
-                    <li>• Track application status</li>
-                  </ul>
-                </CardContent>
+              <Card className="p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <Users className="w-6 h-6 text-green-600" />
+                  <h3 className="text-lg font-semibold">Application Management</h3>
+                </div>
+                <p className="text-gray-600">
+                  Streamlined vendor application process with automated workflows and real-time status updates.
+                </p>
               </Card>
             </div>
           </div>
         </section>
 
-        <section className="py-16 bg-green-50">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">
-              Trusted by Markets Across Australia
-            </h2>
-            <div className="flex justify-center items-center space-x-8 mb-8">
-              <div className="flex items-center space-x-2">
-                <Star className="w-5 h-5 text-yellow-500 fill-current" />
-                <span className="text-2xl font-bold">4.8</span>
-                <span className="text-gray-600">Average Rating</span>
+        {/* How MarketHub Works */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">How MarketHub Works</h2>
+              <p className="text-xl text-gray-600">Simple steps to get started with MarketHub</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              {/* For Market Organizers */}
+              <div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-6">For Market Organizers</h3>
+                <div className="space-y-6">
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">
+                      1
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Create Your Market Profile</h4>
+                      <p className="text-gray-600">
+                        Set up your market with location, schedule, and vendor requirements.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">
+                      2
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Receive Applications</h4>
+                      <p className="text-gray-600">Vendors apply with pre-verified documents and business information.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">
+                      3
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Manage Vendors</h4>
+                      <p className="text-gray-600">
+                        Review, approve, and manage your vendor relationships all in one place.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold">50+</div>
-                <div className="text-gray-600">Active Markets</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold">500+</div>
-                <div className="text-gray-600">Registered Vendors</div>
+
+              {/* For Vendors */}
+              <div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-6">For Vendors</h3>
+                <div className="space-y-6">
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">
+                      1
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Upload Your Documents</h4>
+                      <p className="text-gray-600">
+                        Upload licenses, insurance, and business documents for verification.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">
+                      2
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Discover Markets</h4>
+                      <p className="text-gray-600">
+                        Browse and search for markets that match your business type and location.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">
+                      3
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Apply & Get Accepted</h4>
+                      <p className="text-gray-600">
+                        Submit applications with one click and track your status in real-time.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <Button size="lg" asChild>
-              <Link href="/markets">Browse Markets</Link>
-            </Button>
           </div>
         </section>
 
-        <section className="py-16 bg-white">
+        {/* Stats Section */}
+        <section className="py-16 bg-green-600">
+          <div className="container mx-auto px-4">
+            <div className="text-center text-white">
+              <h2 className="text-3xl font-bold mb-12">Trusted by Markets and Vendors</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div>
+                  <div className="text-4xl font-bold mb-2">500+</div>
+                  <div className="text-green-100">Active Markets</div>
+                </div>
+                <div>
+                  <div className="text-4xl font-bold mb-2">2,500+</div>
+                  <div className="text-green-100">Registered Vendors</div>
+                </div>
+                <div>
+                  <div className="text-4xl font-bold mb-2">10,000+</div>
+                  <div className="text-green-100">Applications Processed</div>
+                </div>
+                <div>
+                  <div className="text-4xl font-bold mb-2">95%</div>
+                  <div className="text-green-100">Success Rate</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 bg-white">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">
-              Ready to Get Started?
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Ready to get started?</h2>
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Join MarketHub today and streamline your market operations or discover new opportunities for your business.
+              Join thousands of market organizers and vendors who trust MarketHub to streamline their operations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild>
-                <Link href="/auth/register">Create Account</Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/markets">Explore Markets</Link>
-              </Button>
+              <Link href="/auth/register">
+                <Button size="lg" className="bg-green-600 hover:bg-green-700 px-8">
+                  Start Free Trial
+                </Button>
+              </Link>
+              <Link href="/markets">
+                <Button size="lg" variant="outline" className="px-8 bg-transparent">
+                  Browse Markets
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="bg-gray-900 text-white py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">M</span>
-              </div>
-              <span className="text-xl font-bold">MarketHub</span>
-            </div>
-            <div className="flex space-x-6">
-              <Link href="/privacy" className="text-gray-400 hover:text-white">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="text-gray-400 hover:text-white">
-                Terms of Service
-              </Link>
-              <Link href="/support" className="text-gray-400 hover:text-white">
-                Support
-              </Link>
-            </div>
-          </div>
-          <div className="mt-4 pt-4 border-t border-gray-800 text-center text-gray-400">
-            <p>&copy; 2024 MarketHub. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
-    </div>
+      </div>
+    </LayoutProvider>
   )
 }
