@@ -1,71 +1,73 @@
+'use client'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Users, FileCheck, MapPin, Search } from 'lucide-react'
+import { Users, FileCheck, MapPin, Search, Store, User } from 'lucide-react'
 import { LayoutProvider } from '@/components/providers/layout-provider'
+import { useState } from 'react'
 
 export default function HomePage() {
+  const [searchMode, setSearchMode] = useState<'vendor' | 'market'>('market')
+  const [searchQuery, setSearchQuery] = useState('')
+
   return (
     <LayoutProvider showHeader={true} showFooter={true}>
       <div className="min-h-screen bg-background">
 
         {/* Hero Section */}
-        <section className="py-20 bg-gray-50">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-6xl font-bold text-gray-900 mb-4">Stallio.</h1>
-            <p className="text-2xl text-gray-700 mb-12">Find, Connect, Manage.</p>
-
-            <div className="max-w-4xl mx-auto mb-8">
-              <div className="bg-white rounded-full shadow-lg border border-gray-200 p-2 flex items-center">
-                <div className="flex-1 flex">
-                  <div className="flex-1 px-6 py-4 border-r border-gray-200">
-                    <div className="text-left">
-                      <div className="text-sm font-medium text-gray-900 mb-1">Where</div>
-                      <input
-                        type="text"
-                        placeholder="Search in a specific location"
-                        className="w-full text-gray-600 placeholder-gray-400 border-none outline-none bg-transparent"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex-1 px-6 py-4 border-r border-gray-200">
-                    <div className="text-left">
-                      <div className="text-sm font-medium text-gray-900 mb-1">What</div>
-                      <input
-                        type="text"
-                        placeholder="Specific"
-                        className="w-full text-gray-600 placeholder-gray-400 border-none outline-none bg-transparent"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex-1 px-6 py-4">
-                    <div className="text-left">
-                      <div className="text-sm font-medium text-gray-900 mb-1">Check out</div>
-                      <input
-                        type="text"
-                        placeholder="Add dates"
-                        className="w-full text-gray-600 placeholder-gray-400 border-none outline-none bg-transparent"
-                      />
-                    </div>
-                  </div>
+        <section className="py-20 md:py-24 bg-gray-50">
+          <div className="container mx-auto px-6">
+            <div className="text-center">
+              <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">Markets meet Vendors. Effortlessly.</h1>
+              <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8">Find the right market to sell at—or discover verified vendors for your market.</p>
+              
+              <div className="flex justify-center items-center bg-white p-2 rounded-lg shadow-md max-w-xl mx-auto mb-6">
+                <div className="flex border border-gray-200 rounded-md">
+                  <button 
+                    onClick={() => setSearchMode('vendor')}
+                    className={`px-4 py-2 rounded-l-md font-semibold whitespace-nowrap ${
+                      searchMode === 'vendor' 
+                        ? 'bg-green-600 text-white' 
+                        : 'bg-white text-gray-600'
+                    }`}
+                  >
+                    Find a Vendor
+                  </button>
+                  <button 
+                    onClick={() => setSearchMode('market')}
+                    className={`px-4 py-2 rounded-r-md font-semibold whitespace-nowrap ${
+                      searchMode === 'market' 
+                        ? 'bg-green-600 text-white' 
+                        : 'bg-white text-gray-600'
+                    }`}
+                  >
+                    Find a Market
+                  </button>
                 </div>
-                <Button size="lg" className="bg-green-600 hover:bg-green-700 rounded-full w-14 h-14 p-0 ml-2">
-                  <Search className="w-5 h-5" />
-                </Button>
+                <div className="flex-grow relative ml-4">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <input 
+                    className="w-full pl-10 pr-4 py-3 rounded-md border-gray-300 focus:ring-green-500 focus:border-green-500" 
+                    placeholder={searchMode === 'market' ? 'Search for markets by name or location' : 'Search for vendors by category or name'}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth/register?role=market_organizer">
-                <Button size="lg" className="bg-green-600 hover:bg-green-700 px-8" rounded="full">
-                  I'm an organiser
-                </Button>
-              </Link>
-              <Link href="/auth/register?role=vendor">
-                <Button size="lg" variant="outline" className="px-8 bg-white border-gray-300" rounded="full">
-                  I'm a vendor
-                </Button>
-              </Link>
+            
+            <div className="mt-12 text-center">
+              <div className="inline-flex items-center bg-green-100 text-green-800 text-sm font-medium px-4 py-1 rounded-full mb-6">
+                {searchMode === 'market' ? (
+                  <><Store className="mr-2 w-4 h-4" /><span>Searching Markets</span></>
+                ) : (
+                  <><User className="mr-2 w-4 h-4" /><span>Searching Vendors</span></>
+                )}
+              </div>
+              <div className="w-full h-96 bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
+                <p className="text-gray-500">Interactive Map Placeholder</p>
+              </div>
             </div>
           </div>
         </section>
@@ -117,143 +119,88 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* How MarketHub Works */}
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">How MarketHub Works</h2>
-              <p className="text-xl text-gray-600">Simple steps to get started with MarketHub</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              {/* For Market Organizers */}
-              <div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-6">For Market Organizers</h3>
-                <div className="space-y-6">
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">
-                      1
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Create Your Market Profile</h4>
-                      <p className="text-gray-600">
-                        Set up your market with location, schedule, and vendor requirements.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">
-                      2
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Receive Applications</h4>
-                      <p className="text-gray-600">Vendors apply with pre-verified documents and business information.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">
-                      3
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Manage Vendors</h4>
-                      <p className="text-gray-600">
-                        Review, approve, and manage your vendor relationships all in one place.
-                      </p>
-                    </div>
-                  </div>
+        {/* How It Works Section */}
+        <section className="py-16 md:py-24 bg-white">
+          <div className="container mx-auto px-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">How It Works</h2>
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              <div className="bg-white p-8 rounded-lg border border-gray-200">
+                <div className="flex items-center mb-4">
+                  <Store className="text-3xl text-green-600 mr-4 w-8 h-8" />
+                  <h3 className="text-2xl font-semibold text-gray-900">For Market Organizers</h3>
                 </div>
+                <p className="text-gray-600">Publish your market, receive applications, or proactively contact vetted vendors.</p>
               </div>
-
-              {/* For Vendors */}
-              <div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-6">For Vendors</h3>
-                <div className="space-y-6">
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">
-                      1
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Upload Your Documents</h4>
-                      <p className="text-gray-600">
-                        Upload licenses, insurance, and business documents for verification.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">
-                      2
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Discover Markets</h4>
-                      <p className="text-gray-600">
-                        Browse and search for markets that match your business type and location.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">
-                      3
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Apply & Get Accepted</h4>
-                      <p className="text-gray-600">
-                        Submit applications with one click and track your status in real-time.
-                      </p>
-                    </div>
-                  </div>
+              <div className="bg-white p-8 rounded-lg border border-gray-200">
+                <div className="flex items-center mb-4">
+                  <User className="text-3xl text-green-600 mr-4 w-8 h-8" />
+                  <h3 className="text-2xl font-semibold text-gray-900">For Vendors</h3>
                 </div>
+                <p className="text-gray-600">Browse markets, verify your documents once, and apply with confidence.</p>
               </div>
             </div>
           </div>
         </section>
 
         {/* Stats Section */}
-        <section className="py-16 bg-green-600">
-          <div className="container mx-auto px-4">
-            <div className="text-center text-white">
-              <h2 className="text-3xl font-bold mb-12">Trusted by Markets and Vendors</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div>
-                  <div className="text-4xl font-bold mb-2">500+</div>
-                  <div className="text-green-100">Active Markets</div>
-                </div>
-                <div>
-                  <div className="text-4xl font-bold mb-2">2,500+</div>
-                  <div className="text-green-100">Registered Vendors</div>
-                </div>
-                <div>
-                  <div className="text-4xl font-bold mb-2">10,000+</div>
-                  <div className="text-green-100">Applications Processed</div>
-                </div>
-                <div>
-                  <div className="text-4xl font-bold mb-2">95%</div>
-                  <div className="text-green-100">Success Rate</div>
-                </div>
+        <section className="py-16 md:py-24 bg-gray-50">
+          <div className="container mx-auto px-6 text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Trusted by Markets & Vendors</h2>
+            <p className="text-gray-600 mb-12">Join our growing community.</p>
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
+              <div className="text-center">
+                <p className="text-4xl font-bold text-green-600">4.8 <span className="text-yellow-400">★</span></p>
+                <p className="text-gray-600 mt-1">Average Rating</p>
+              </div>
+              <div className="text-center">
+                <p className="text-4xl font-bold text-green-600">50+</p>
+                <p className="text-gray-600 mt-1">Active Markets</p>
+              </div>
+              <div className="text-center">
+                <p className="text-4xl font-bold text-green-600">500+</p>
+                <p className="text-gray-600 mt-1">Registered Vendors</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="py-16 md:py-24 bg-white">
+          <div className="container mx-auto px-6 max-w-3xl">
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">Frequently Asked Questions</h2>
+            <div className="space-y-4">
+              <div className="bg-white p-6 rounded-lg border border-gray-200">
+                <h3 className="font-semibold text-lg text-gray-900">How does MarketHub work for vendors?</h3>
+                <p className="text-gray-600 mt-2">Vendors can create a profile, upload documents for verification (like insurance or permits), browse a directory of markets, and apply to them with a single click.</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg border border-gray-200">
+                <h3 className="font-semibold text-lg text-gray-900">What are the benefits for market organizers?</h3>
+                <p className="text-gray-600 mt-2">Organizers can list their market to attract vendors, manage applications in one place, and search a database of pre-vetted vendors to invite to their events, saving time and ensuring quality.</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg border border-gray-200">
+                <h3 className="font-semibold text-lg text-gray-900">Is my data secure?</h3>
+                <p className="text-gray-600 mt-2">Yes, we use industry-standard security practices to protect all user data and documents. Your privacy and security are our top priorities.</p>
               </div>
             </div>
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-4 text-center">
+        <section className="py-20 bg-gray-50">
+          <div className="container mx-auto px-6 text-center">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Ready to get started?</h2>
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
               Join thousands of market organizers and vendors who trust MarketHub to streamline their operations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth/register">
+              <Link href="/auth/register?role=market_organizer">
                 <Button size="lg" className="bg-green-600 hover:bg-green-700 px-8">
-                  Start Free Trial
+                  I'm an Organizer
                 </Button>
               </Link>
-              <Link href="/markets">
-                <Button size="lg" variant="outline" className="px-8 bg-transparent">
-                  Browse Markets
+              <Link href="/auth/register?role=vendor">
+                <Button size="lg" variant="outline" className="px-8 bg-white border-gray-300">
+                  I'm a Vendor
                 </Button>
               </Link>
             </div>
