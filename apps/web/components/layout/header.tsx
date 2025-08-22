@@ -106,13 +106,13 @@ export function Header({ userRole, userName, userAvatar }: HeaderProps) {
                   Dashboard
                 </Link>
                 <Link 
-                  href="/organizer/market" 
+                  href="/organizer/markets" 
                   className={cn(
                     "text-gray-600 hover:text-green-600 transition-colors",
-                    isActive("/organizer/market") && "text-green-600 font-semibold"
+                    isActive("/organizer/markets") && "text-green-600 font-semibold"
                   )}
                 >
-                  Market Management
+                  Markets
                 </Link>
                 <Link 
                   href="/organizer/applications" 
@@ -124,13 +124,13 @@ export function Header({ userRole, userName, userAvatar }: HeaderProps) {
                   Applications
                 </Link>
                 <Link 
-                  href="/organizer/messages" 
+                  href="/organizer/profile" 
                   className={cn(
                     "text-gray-600 hover:text-green-600 transition-colors",
-                    isActive("/organizer/messages") && "text-green-600 font-semibold"
+                    isActive("/organizer/profile") && "text-green-600 font-semibold"
                   )}
                 >
-                  Messages
+                  Profile
                 </Link>
               </>
             )}
