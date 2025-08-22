@@ -58,12 +58,13 @@
   }
 }
 
-/* Mapbox styles */
+/* Mapbox styles - temporarily commented out for build
 @import 'mapbox-gl/dist/mapbox-gl.css';
 
 .mapboxgl-ctrl-geocoder {
   min-width: 300px;
 }
+*/
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {

@@ -13,68 +13,68 @@ export default function HomePage() {
   return (
     <LayoutProvider showHeader={true} showFooter={true}>
       <div className="min-h-screen bg-background">
-
-        {/* Hero Section */}
-        <section className="py-20 md:py-24 bg-gray-50">
-          <div className="container mx-auto px-6">
-            <div className="text-center">
-              <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">Markets meet Vendors. Effortlessly.</h1>
-              <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8">Find the right market to sell at—or discover verified vendors for your market.</p>
+        <main>
+          {/* Hero Section */}
+          <section className="py-20 md:py-24 bg-gray-50">
+            <div className="container mx-auto px-6">
+              <div className="text-center">
+                <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">Markets meet Vendors. Effortlessly.</h1>
+                <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8">Find the right market to sell at—or discover verified vendors for your market.</p>
+                
+                <div className="flex justify-center items-center bg-white p-2 rounded-lg shadow-md max-w-xl mx-auto mb-6">
+                  <div className="flex border border-gray-200 rounded-md">
+                    <button 
+                      onClick={() => setSearchMode('vendor')}
+                      className={`px-4 py-2 rounded-l-md font-semibold whitespace-nowrap ${
+                        searchMode === 'vendor' 
+                          ? 'bg-green-600 text-white' 
+                          : 'bg-white text-gray-600'
+                      }`}
+                    >
+                      Find a Vendor
+                    </button>
+                    <button 
+                      onClick={() => setSearchMode('market')}
+                      className={`px-4 py-2 rounded-r-md font-semibold whitespace-nowrap ${
+                        searchMode === 'market' 
+                          ? 'bg-green-600 text-white' 
+                          : 'bg-white text-gray-600'
+                      }`}
+                    >
+                      Find a Market
+                    </button>
+                  </div>
+                  <div className="flex-grow relative ml-4">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <input 
+                      className="w-full pl-10 pr-4 py-3 rounded-md border-gray-300 focus:ring-green-500 focus:border-green-500" 
+                      placeholder={searchMode === 'market' ? 'Search for markets by name or location' : 'Search for vendors by category or name'}
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
               
-              <div className="flex justify-center items-center bg-white p-2 rounded-lg shadow-md max-w-xl mx-auto mb-6">
-                <div className="flex border border-gray-200 rounded-md">
-                  <button 
-                    onClick={() => setSearchMode('vendor')}
-                    className={`px-4 py-2 rounded-l-md font-semibold whitespace-nowrap ${
-                      searchMode === 'vendor' 
-                        ? 'bg-green-600 text-white' 
-                        : 'bg-white text-gray-600'
-                    }`}
-                  >
-                    Find a Vendor
-                  </button>
-                  <button 
-                    onClick={() => setSearchMode('market')}
-                    className={`px-4 py-2 rounded-r-md font-semibold whitespace-nowrap ${
-                      searchMode === 'market' 
-                        ? 'bg-green-600 text-white' 
-                        : 'bg-white text-gray-600'
-                    }`}
-                  >
-                    Find a Market
-                  </button>
+              <div className="mt-12 text-center">
+                <div className="inline-flex items-center bg-green-100 text-green-800 text-sm font-medium px-4 py-1 rounded-full mb-6">
+                  {searchMode === 'market' ? (
+                    <><Store className="mr-2 w-4 h-4" /><span>Searching Markets</span></>
+                  ) : (
+                    <><User className="mr-2 w-4 h-4" /><span>Searching Vendors</span></>
+                  )}
                 </div>
-                <div className="flex-grow relative ml-4">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <input 
-                    className="w-full pl-10 pr-4 py-3 rounded-md border-gray-300 focus:ring-green-500 focus:border-green-500" 
-                    placeholder={searchMode === 'market' ? 'Search for markets by name or location' : 'Search for vendors by category or name'}
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
+                <div className="w-full h-96 bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
+                  <p className="text-gray-500">Interactive Map Placeholder</p>
                 </div>
               </div>
             </div>
-            
-            <div className="mt-12 text-center">
-              <div className="inline-flex items-center bg-green-100 text-green-800 text-sm font-medium px-4 py-1 rounded-full mb-6">
-                {searchMode === 'market' ? (
-                  <><Store className="mr-2 w-4 h-4" /><span>Searching Markets</span></>
-                ) : (
-                  <><User className="mr-2 w-4 h-4" /><span>Searching Vendors</span></>
-                )}
-              </div>
-              <div className="w-full h-96 bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
-                <p className="text-gray-500">Interactive Map Placeholder</p>
-              </div>
-            </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Features Section */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4">
+          {/* Features Section */}
+          <section className="py-16 bg-white">
+            <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">Everything you need to manage markets and vendors</h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
