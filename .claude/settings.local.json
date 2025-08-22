@@ -10,7 +10,9 @@
       "Bash(git add apps/web/components/ui/badge.tsx apps/web/next.config.js)",
       "Bash(git push:*)",
       "Bash(npm run lint)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "WebFetch(domain:markethub-web.vercel.app)"
     ],
     "deny": [],
     "ask": []

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizer Dashboard - MarketHub</title>
+    <meta name="description" content="Manage your markets, vendor applications, and analytics on MarketHub's organizer dashboard.">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='65' font-family='Arial' font-size='60' font-weight='bold' text-anchor='middle' fill='white'>M</text></svg>">
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">M</div>
+                    <span class="logo-text">MarketHub</span>
+                </a>
+                
+                <nav class="nav">
+                    <a href="organizer-dashboard.html" class="nav-link text-green-600">Dashboard</a>
+                    <a href="#" class="nav-link">My Markets</a>
+                    <a href="#" class="nav-link">Applications</a>
+                    <a href="#" class="nav-link">Analytics</a>
+                    <div class="relative">
+                        <button class="btn btn-outline btn-sm">
+                            👤 Demo Organizer
+                        </button>
+                    </div>
+                </nav>
+                
+                <button class="mobile-menu" id="mobile-menu" onclick="toggleMobileMenu()">
+                    ☰
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="min-h-screen py-8">
+        <div class="container">
+            <!-- Welcome Section -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome back, Demo Organizer! 👋</h1>
+                <p class="text-gray-600">Here's an overview of your markets and recent activity.</p>
+            </div>
+
+            <!-- Quick Stats -->
+            <div id="stats-container" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <!-- Stats will be populated by JavaScript -->
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Main Content -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Pending Applications -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="flex justify-between items-center">
+                                <h2 class="card-title">Pending Applications</h2>
+                                <span class="badge badge-secondary">12 new</span>
+                            </div>
+                            <p class="card-description">Review and approve vendor applications</p>
+                        </div>
+                        <div class="card-content">
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                        <span class="font-semibold text-blue-600">FV</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-semibold">Fresh Valley Produce</h3>
+                                        <p class="text-sm text-muted-foreground">Downtown Farmers Market • Applied 2 days ago</p>
+                                        <div class="flex gap-2 mt-2">
+                                            <span class="badge badge-default">Organic Produce</span>
+                                            <span class="badge badge-outline">Local</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button class="btn btn-sm btn-outline">Review</button>
+                                        <button class="btn btn-sm btn-primary">Approve</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
+                                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                        <span class="font-semibold text-purple-600">HP</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-semibold">Handmade Pottery Co</h3>
+                                        <p class="text-sm text-muted-foreground">Artisan Craft Fair • Applied 1 day ago</p>
+                                        <div class="flex gap-2 mt-2">
+                                            <span class="badge badge-default">Ceramics</span>
+                                            <span class="badge badge-outline">Handmade</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button class="btn btn-sm btn-outline">Review</button>
+                                        <button class="btn btn-sm btn-primary">Approve</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                        <span class="font-semibold text-green-600">GT</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-semibold">Gourmet Tacos</h3>
+                                        <p class="text-sm text-muted-foreground">Riverside Food Truck Festival • Applied 3 hours ago</p>
+                                        <div class="flex gap-2 mt-2">
+                                            <span class="badge badge-default">Food Truck</span>
+                                            <span class="badge badge-outline">Mexican</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button class="btn btn-sm btn-outline">Review</button>
+                                        <button class="btn btn-sm btn-primary">Approve</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-4 border-t">
+                                <button class="btn btn-outline w-full">View All Applications</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Recent Activity</h2>
+                            <p class="card-description">Latest updates across your markets</p>
+                        </div>
+                        <div class="card-content">
+                            <div class="space-y-4">
+                                <div class="flex gap-3">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                                    <div>
+                                        <p class="text-sm"><strong>Sarah Martinez</strong> was approved for Downtown Farmers Market</p>
+                                        <p class="text-xs text-muted-foreground">2 hours ago</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-3">
+                                    <div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                                    <div>
+                                        <p class="text-sm">New application received for <strong>Artisan Craft Fair</strong></p>
+                                        <p class="text-xs text-muted-foreground">4 hours ago</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-3">
+                                    <div class="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
+                                    <div>
+                                        <p class="text-sm">Document expiry reminder sent to 3 vendors</p>
+                                        <p class="text-xs text-muted-foreground">1 day ago</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-3">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                                    <div>
+                                        <p class="text-sm"><strong>Mike Johnson</strong> updated their business documents</p>
+                                        <p class="text-xs text-muted-foreground">2 days ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Quick Actions</h3>
+                        </div>
+                        <div class="card-content space-y-3">
+                            <button class="btn btn-primary w-full">
+                                Create New Market
+                            </button>
+                            <button class="btn btn-outline w-full">
+                                Bulk Approve Applications
+                            </button>
+                            <button class="btn btn-outline w-full">
+                                Export Vendor Data
+                            </button>
+                            <button class="btn btn-outline w-full">
+                                Send Announcements
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- My Markets -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">My Markets</h3>
+                        </div>
+                        <div class="card-content space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                                <div>
+                                    <h4 class="font-semibold text-sm">Downtown Farmers Market</h4>
+                                    <p class="text-xs text-muted-foreground">45 active vendors</p>
+                                </div>
+                                <span class="badge badge-default">Active</span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                <div>
+                                    <h4 class="font-semibold text-sm">Artisan Craft Fair</h4>
+                                    <p class="text-xs text-muted-foreground">30 active vendors</p>
+                                </div>
+                                <span class="badge badge-default">Active</span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                                <div>
+                                    <h4 class="font-semibold text-sm">Riverside Food Festival</h4>
+                                    <p class="text-xs text-muted-foreground">20 active vendors</p>
+                                </div>
+                                <span class="badge badge-default">Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Insights -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">This Month</h3>
+                        </div>
+                        <div class="card-content space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">New Applications</span>
+                                <span class="font-semibold text-green-600">+23</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Approved Vendors</span>
+                                <span class="font-semibold text-green-600">+18</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Revenue Generated</span>
+                                <span class="font-semibold text-green-600">+$2,450</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Avg. Response Time</span>
+                                <span class="font-semibold">1.2 days</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Events -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Upcoming Events</h3>
+                        </div>
+                        <div class="card-content space-y-3">
+                            <div class="p-3 bg-green-50 border border-green-200 rounded-lg">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <h4 class="font-semibold text-sm">Downtown Farmers Market</h4>
+                                </div>
+                                <p class="text-xs text-muted-foreground">Saturday, Jan 20 • 8:00 AM</p>
+                            </div>
+                            
+                            <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                    <h4 class="font-semibold text-sm">Artisan Craft Fair</h4>
+                                </div>
+                                <p class="text-xs text-muted-foreground">Sunday, Jan 21 • 10:00 AM</p>
+                            </div>
+                            
+                            <div class="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                    <h4 class="font-semibold text-sm">Food Truck Festival</h4>
+                                </div>
+                                <p class="text-xs text-muted-foreground">Thursday, Jan 25 • 5:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="container">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="logo-icon">M</div>
+                        <span class="text-xl font-bold">MarketHub</span>
+                    </div>
+                    <p class="text-gray-400">
+                        Connecting local markets with quality vendors through innovative technology.
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">Product</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="markets.html" class="hover:text-white">Find Markets</a></li>
+                        <li><a href="#" class="hover:text-white">Features</a></li>
+                        <li><a href="#" class="hover:text-white">Pricing</a></li>
+                        <li><a href="#" class="hover:text-white">API</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">Company</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">About</a></li>
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
+                        <li><a href="#" class="hover:text-white">Careers</a></li>
+                        <li><a href="#" class="hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white">Status</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 MarketHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

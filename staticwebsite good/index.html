@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MarketHub - Redesigned Landing Page</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+<header class="bg-white py-4 px-6 md:px-10 flex justify-between items-center shadow-sm sticky top-0 z-50">
+<div class="flex items-center">
+<img alt="MarketHub Logo" class="h-8 mr-3" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkSgaEPreifvANG9iFGf8gLT1nq6-ITIi5Ynh6h68396XdwMhG7OPpDX_HXSwKmZraEYcEnhLcOk8gH2K0OL8FNrHDaosQkC_h4ab0yKUzd7lFsBZGEY0qvA4jHXHSBDUOrUYqg4Q_WKfwWw2eDMnidEcSTCfKPNzW6xtLUbP5-hCi3iWoTLGvaZvDEtU2PReZwhDpr17fwRqBBeJSoYn1OSVXdLaEMfnioYPXAkBU-Xm0bgIAVSpC5pLbt_3CLDIMEGGv5sVDRKU"/>
+<span class="font-bold text-xl text-gray-800">MarketHub</span>
+</div>
+<nav class="hidden md:flex items-center space-x-6">
+<a class="text-gray-600 hover:text-gray-900 font-medium" href="/markets">Find Markets</a>
+<a class="text-gray-600 hover:text-gray-900 font-medium" href="/vendors">Find Vendors</a>
+<a class="text-gray-600 hover:text-gray-900 font-medium" href="#">Sign In</a>
+</nav>
+<button class="md:hidden">
+<span class="material-icons">menu</span>
+</button>
+</header>
+<main>
+<section class="bg-gray-50 py-20 md:py-24">
+<div class="container mx-auto px-6">
+<div class="text-center">
+<h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-4">Markets meet Vendors. Effortlessly.</h1>
+<p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8">Find the right market to sell at—or discover verified vendors for your market.</p>
+<div class="flex justify-center items-center bg-white p-2 rounded-lg shadow-md max-w-xl mx-auto mb-6">
+<div class="flex border border-gray-200 rounded-md">
+<button class="px-4 py-2 rounded-l-md bg-green-600 text-white font-semibold whitespace-nowrap" id="vendor-toggle">Find a Vendor</button>
+<button class="px-4 py-2 rounded-r-md bg-white text-gray-600 font-semibold whitespace-nowrap" id="organizer-toggle">Find a Market</button>
+</div>
+<div class="flex-grow relative ml-4">
+<span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-md border-gray-300 focus:ring-green-500 focus:border-green-500" id="search-input" placeholder="Search for markets by name or location" type="text"/>
+</div>
+</div>
+</div>
+<div class="mt-12 text-center" id="map-module">
+<div class="inline-flex items-center bg-green-100 text-green-800 text-sm font-medium px-4 py-1 rounded-full mb-6" id="context-chip">
+<span class="material-icons mr-2 text-base">storefront</span>
+<span id="map-mode-text">Searching Markets</span>
+</div>
+<div class="w-full h-96 bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
+<p class="text-gray-500">Interactive Map Placeholder</p>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16 md:py-24 bg-white" id="how-it-works">
+<div class="container mx-auto px-6">
+<h2 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">How It Works</h2>
+<div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+<div class="bg-white p-8 rounded-lg border border-gray-200">
+<div class="flex items-center mb-4">
+<span class="material-icons text-3xl text-green-600 mr-4">store</span>
+<h3 class="text-2xl font-semibold text-gray-900">For Market Organizers</h3>
+</div>
+<p class="text-gray-600">Publish your market, receive applications, or proactively contact vetted vendors.</p>
+</div>
+<div class="bg-white p-8 rounded-lg border border-gray-200">
+<div class="flex items-center mb-4">
+<span class="material-icons text-3xl text-green-600 mr-4">person</span>
+<h3 class="text-2xl font-semibold text-gray-900">For Vendors</h3>
+</div>
+<p class="text-gray-600">Browse markets, verify your documents once, and apply with confidence.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16 md:py-24 bg-gray-50" id="proof">
+<div class="container mx-auto px-6 text-center">
+<h2 class="text-3xl font-bold text-gray-900 mb-4">Trusted by Markets &amp; Vendors</h2>
+<p class="text-gray-600 mb-12">Join our growing community.</p>
+<div class="flex flex-wrap justify-center items-center gap-8 md:gap-16">
+<div class="text-center">
+<p class="text-4xl font-bold text-green-600">4.8 <span class="text-yellow-400">★</span></p>
+<p class="text-gray-600 mt-1">Average Rating</p>
+</div>
+<div class="text-center">
+<p class="text-4xl font-bold text-green-600">50+</p>
+<p class="text-gray-600 mt-1">Active Markets</p>
+</div>
+<div class="text-center">
+<p class="text-4xl font-bold text-green-600">500+</p>
+<p class="text-gray-600 mt-1">Registered Vendors</p>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16 md:py-24 bg-white" id="faq">
+<div class="container mx-auto px-6 max-w-3xl">
+<h2 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">Frequently Asked Questions</h2>
+<div class="space-y-4">
+<div class="bg-white p-6 rounded-lg border border-gray-200">
+<h3 class="font-semibold text-lg text-gray-900">How does MarketHub work for vendors?</h3>
+<p class="text-gray-600 mt-2">Vendors can create a profile, upload documents for verification (like insurance or permits), browse a directory of markets, and apply to them with a single click.</p>
+</div>
+<div class="bg-white p-6 rounded-lg border border-gray-200">
+<h3 class="font-semibold text-lg text-gray-900">What are the benefits for market organizers?</h3>
+<p class="text-gray-600 mt-2">Organizers can list their market to attract vendors, manage applications in one place, and search a database of pre-vetted vendors to invite to their events, saving time and ensuring quality.</p>
+</div>
+<div class="bg-white p-6 rounded-lg border border-gray-200">
+<h3 class="font-semibold text-lg text-gray-900">Is my data secure?</h3>
+<p class="text-gray-600 mt-2">Yes, we use industry-standard security practices to protect all user data and documents. Your privacy and security are our top priorities.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-gray-900 text-white">
+<div class="container mx-auto px-6 py-12">
+<div class="flex flex-col md:flex-row justify-between items-center">
+<div class="mb-8 md:mb-0">
+<div class="flex items-center mb-4">
+<img alt="MarketHub Logo" class="h-8 mr-3 filter invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0aaOae77CkFF8ePtSES-A3vu1TCyEv8VuoRRxxZc-8xA4sFbK2v38_wngPI4tfVGLfb1-BYkhCxBP7Q11Bsj8gY0PTXtURoaC6i82_tL2g4cOyiD7TwzUnQY6q5-quTI7kQGrnlpPcmbyYr54ECYOKLL4oDQuUHzcpbuQEuAcYYakYhR-HchpMx7KmVKpJWX7nUQ-3XOXNexY9fGvdxE8enZ7CnwShYCKJWRrV_y4oHtt51PrbjQNgslja63Zt-43KSnUZk-jlpo"/>
+<span class="font-bold text-xl">MarketHub</span>
+</div>
+<p class="text-gray-400">© 2024 MarketHub. All rights reserved.</p>
+</div>
+<div class="flex space-x-6">
+<a class="text-gray-400 hover:text-white" href="#">Privacy Policy</a>
+<a class="text-gray-400 hover:text-white" href="#">Terms of Service</a>
+<a class="text-gray-400 hover:text-white" href="#">Support</a>
+</div>
+</div>
+</div>
+</footer>
+<script>
+    const vendorToggle = document.getElementById('vendor-toggle');
+    const organizerToggle = document.getElementById('organizer-toggle');
+    const searchInput = document.getElementById('search-input');
+    const contextChip = document.getElementById('context-chip');
+    const mapModeText = document.getElementById('map-mode-text');
+    const mapModeIcon = contextChip.querySelector('.material-icons');
+    function setVendorMode() { // This should be "Find a Market" mode based on UI
+        vendorToggle.classList.remove('bg-green-600', 'text-white');
+        vendorToggle.classList.add('bg-white', 'text-gray-600');
+        organizerToggle.classList.add('bg-green-600', 'text-white');
+        organizerToggle.classList.remove('bg-white', 'text-gray-600');
+        searchInput.placeholder = "Search for markets by name or location";
+        mapModeText.textContent = "Searching Markets";
+        mapModeIcon.textContent = "storefront";
+    }
+    function setOrganizerMode() { // This should be "Find a Vendor" mode based on UI
+        organizerToggle.classList.remove('bg-green-600', 'text-white');
+        organizerToggle.classList.add('bg-white', 'text-gray-600');
+        vendorToggle.classList.add('bg-green-600', 'text-white');
+        vendorToggle.classList.remove('bg-white', 'text-gray-600');
+        searchInput.placeholder = "Search for vendors by category or name";
+        mapModeText.textContent = "Searching Vendors";
+        mapModeIcon.textContent = "person_search";
+    }
+    // Swapped the event listeners to match the new button text
+    vendorToggle.addEventListener('click', setOrganizerMode);
+    organizerToggle.addEventListener('click', setVendorMode);
+    // Set initial state correctly based on "Find a Market" being active
+    setVendorMode();
+</script>
+
+</body></html>

@@ -5,10 +5,31 @@ import { Card } from '@/components/ui/card'
 import { Users, FileCheck, MapPin, Search, Store, User } from 'lucide-react'
 import { LayoutProvider } from '@/components/providers/layout-provider'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import InteractiveMap from '@/components/ui/interactive-map'
 
 export default function HomePage() {
   const [searchMode, setSearchMode] = useState<'vendor' | 'market'>('market')
   const [searchQuery, setSearchQuery] = useState('')
+  const router = useRouter()
+
+  const handleSearch = () => {
+    if (!searchQuery.trim()) return
+    
+    if (searchMode === 'market') {
+      router.push(`/markets?search=${encodeURIComponent(searchQuery)}`)
+    } else {
+      // For vendor search, we'll redirect to markets page for now
+      // TODO: Implement dedicated vendor search page
+      router.push(`/markets?search=${encodeURIComponent(searchQuery)}`)
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  }
 
   return (
     <LayoutProvider showHeader={true} showFooter={true}>
@@ -25,20 +46,20 @@ export default function HomePage() {
                   <div className="flex border border-gray-200 rounded-md">
                     <button 
                       onClick={() => setSearchMode('vendor')}
-                      className={`px-4 py-2 rounded-l-md font-semibold whitespace-nowrap ${
+                      className={`px-4 py-2 rounded-l-md font-semibold whitespace-nowrap transition-all duration-200 ${
                         searchMode === 'vendor' 
-                          ? 'bg-green-600 text-white' 
-                          : 'bg-white text-gray-600'
+                          ? 'bg-green-600 text-white shadow-sm' 
+                          : 'bg-white text-gray-600 hover:bg-gray-50'
                       }`}
                     >
                       Find a Vendor
                     </button>
                     <button 
                       onClick={() => setSearchMode('market')}
-                      className={`px-4 py-2 rounded-r-md font-semibold whitespace-nowrap ${
+                      className={`px-4 py-2 rounded-r-md font-semibold whitespace-nowrap transition-all duration-200 ${
                         searchMode === 'market' 
-                          ? 'bg-green-600 text-white' 
-                          : 'bg-white text-gray-600'
+                          ? 'bg-green-600 text-white shadow-sm' 
+                          : 'bg-white text-gray-600 hover:bg-gray-50'
                       }`}
                     >
                       Find a Market
@@ -47,13 +68,21 @@ export default function HomePage() {
                   <div className="flex-grow relative ml-4">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <input 
-                      className="w-full pl-10 pr-4 py-3 rounded-md border-gray-300 focus:ring-green-500 focus:border-green-500" 
+                      className="w-full pl-10 pr-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200" 
                       placeholder={searchMode === 'market' ? 'Search for markets by name or location' : 'Search for vendors by category or name'}
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyPress={handleKeyPress}
                     />
                   </div>
+                  <Button 
+                    onClick={handleSearch}
+                    className="ml-2 bg-green-600 hover:bg-green-700 px-6"
+                    disabled={!searchQuery.trim()}
+                  >
+                    Search
+                  </Button>
                 </div>
               </div>
               
@@ -65,9 +94,11 @@ export default function HomePage() {
                     <><User className="mr-2 w-4 h-4" /><span>Searching Vendors</span></>
                   )}
                 </div>
-                <div className="w-full h-96 bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
-                  <p className="text-gray-500">Interactive Map Placeholder</p>
-                </div>
+                <InteractiveMap 
+                  searchMode={searchMode}
+                  searchQuery={searchQuery}
+                  className="w-full h-96"
+                />
               </div>
             </div>
           </section>

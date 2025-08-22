@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Local Markets - MarketHub</title>
+    <meta name="description" content="Discover local farmers markets, craft fairs, and food festivals near you. Apply to markets with verified documents through MarketHub.">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='65' font-family='Arial' font-size='60' font-weight='bold' text-anchor='middle' fill='white'>M</text></svg>">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">M</div>
+                    <span class="logo-text">MarketHub</span>
+                </a>
+                
+                <nav class="nav">
+                    <a href="markets.html" class="nav-link">Find Markets</a>
+                    <a href="login.html" class="nav-link">Sign In</a>
+                    <a href="register.html" class="btn btn-primary">Join MarketHub</a>
+                </nav>
+                
+                <button class="mobile-menu" id="mobile-menu" onclick="toggleMobileMenu()">
+                    ☰
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="min-h-screen bg-gray-50">
+        <!-- Page Header -->
+        <section class="py-12 bg-white border-b">
+            <div class="container">
+                <div class="text-center mb-8">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                        Discover Local Markets
+                    </h1>
+                    <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                        Find farmers markets, craft fairs, and food festivals in your area. Apply with confidence using your pre-verified documents.
+                    </p>
+                </div>
+                
+                <!-- Search Filters -->
+                <div class="max-w-4xl mx-auto">
+                    <form class="grid grid-cols-1 md:grid-cols-3 gap-4" onsubmit="event.preventDefault();">
+                        <div class="form-group">
+                            <label for="search-input" class="label">Search Markets</label>
+                            <input 
+                                type="text" 
+                                id="search-input" 
+                                class="input" 
+                                placeholder="Market name, category..."
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="location-input" class="label">Location</label>
+                            <input 
+                                type="text" 
+                                id="location-input" 
+                                class="input" 
+                                placeholder="City, state, or zip code"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="category-select" class="label">Category</label>
+                            <select id="category-select" class="input">
+                                <option value="">All Categories</option>
+                                <option value="food">Food</option>
+                                <option value="crafts">Crafts</option>
+                                <option value="produce">Produce</option>
+                                <option value="art">Art</option>
+                                <option value="jewelry">Jewelry</option>
+                                <option value="entertainment">Entertainment</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Markets Layout with Sidebar and Map -->
+        <section class="py-8">
+            <div class="container">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-semibold text-gray-900">Available Markets</h2>
+                        <p class="text-gray-600">3 markets found</p>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button class="btn btn-sm btn-outline" onclick="toggleView('list')">
+                            <span class="icon">📋</span>
+                            List View
+                        </button>
+                        <button class="btn btn-sm btn-primary" onclick="toggleView('grid')">
+                            <span class="icon">⊞</span>
+                            Grid View
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left Sidebar - Markets List -->
+                    <div class="lg:col-span-1">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Markets Near You</h3>
+                                <p class="card-description">Closest markets first</p>
+                            </div>
+                            <div class="card-content">
+                                <div id="markets-sidebar" class="space-y-4">
+                                    <!-- Markets will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Side - Interactive Map -->
+                    <div class="lg:col-span-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="card-title">Interactive Map</h3>
+                                    <button id="locate-me" class="btn btn-sm btn-primary" onclick="locateUser()">
+                                        <span class="icon">📍</span>
+                                        Near Me
+                                    </button>
+                                </div>
+                                <p class="card-description">Click on markets to see details</p>
+                            </div>
+                            <div class="card-content">
+                                <div id="map-container" class="w-full h-96 bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <div class="text-center">
+                                        <div class="text-4xl mb-4">🗺️</div>
+                                        <p class="text-gray-600 mb-2">Interactive Map Loading...</p>
+                                        <button class="btn btn-sm btn-primary" onclick="initializeMap()">
+                                            Load Map
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Full Grid View (hidden by default) -->
+                <div id="markets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8" style="display: none;">
+                    <!-- Markets will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="py-16 bg-white">
+            <div class="container text-center">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                    Don't see your perfect market?
+                </h2>
+                <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                    New markets are added regularly. Create your vendor profile now and get notified when markets matching your criteria become available.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="register.html?role=vendor" class="btn btn-lg btn-primary">
+                        Create Vendor Profile
+                    </a>
+                    <a href="#" class="btn btn-lg btn-outline">
+                        Request Market Addition
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Market Categories -->
+        <section class="py-16 bg-gray-50">
+            <div class="container">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                        Popular Market Categories
+                    </h2>
+                    <p class="text-xl text-gray-600">
+                        Explore different types of markets available on MarketHub
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div class="card text-center">
+                        <div class="card-content">
+                            <div class="text-3xl mb-2">🥕</div>
+                            <h3 class="font-semibold">Farmers Markets</h3>
+                            <p class="text-sm text-muted-foreground">Fresh produce & local goods</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card text-center">
+                        <div class="card-content">
+                            <div class="text-3xl mb-2">🎨</div>
+                            <h3 class="font-semibold">Craft Fairs</h3>
+                            <p class="text-sm text-muted-foreground">Handmade arts & crafts</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card text-center">
+                        <div class="card-content">
+                            <div class="text-3xl mb-2">🍕</div>
+                            <h3 class="font-semibold">Food Festivals</h3>
+                            <p class="text-sm text-muted-foreground">Culinary experiences</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card text-center">
+                        <div class="card-content">
+                            <div class="text-3xl mb-2">💎</div>
+                            <h3 class="font-semibold">Jewelry Shows</h3>
+                            <p class="text-sm text-muted-foreground">Fine & handmade jewelry</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card text-center">
+                        <div class="card-content">
+                            <div class="text-3xl mb-2">🎪</div>
+                            <h3 class="font-semibold">Street Fairs</h3>
+                            <p class="text-sm text-muted-foreground">Community celebrations</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card text-center">
+                        <div class="card-content">
+                            <div class="text-3xl mb-2">🏺</div>
+                            <h3 class="font-semibold">Artisan Markets</h3>
+                            <p class="text-sm text-muted-foreground">Unique handcrafted items</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vendor Success Stories -->
+        <section class="py-16 bg-white">
+            <div class="container">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                        Success Stories
+                    </h2>
+                    <p class="text-xl text-gray-600">
+                        Hear from vendors who found their perfect markets through MarketHub
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="mb-4">
+                                <div class="flex text-yellow-400 mb-2">
+                                    ⭐⭐⭐⭐⭐
+                                </div>
+                                <p class="text-gray-600 italic">
+                                    "MarketHub made it so easy to find and apply to local farmers markets. The document verification saved me hours of paperwork!"
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                    <span class="font-semibold text-green-600">SM</span>
+                                </div>
+                                <div>
+                                    <div class="font-semibold">Sarah Martinez</div>
+                                    <div class="text-sm text-muted-foreground">Fresh Valley Produce</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="mb-4">
+                                <div class="flex text-yellow-400 mb-2">
+                                    ⭐⭐⭐⭐⭐
+                                </div>
+                                <p class="text-gray-600 italic">
+                                    "I've expanded to 5 different markets this year thanks to MarketHub's streamlined application process."
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span class="font-semibold text-blue-600">MJ</span>
+                                </div>
+                                <div>
+                                    <div class="font-semibold">Mike Johnson</div>
+                                    <div class="text-sm text-muted-foreground">Artisan Wood Works</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="mb-4">
+                                <div class="flex text-yellow-400 mb-2">
+                                    ⭐⭐⭐⭐⭐
+                                </div>
+                                <p class="text-gray-600 italic">
+                                    "The platform helped me discover markets I never knew existed. My jewelry business has grown 300% this year!"
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <span class="font-semibold text-purple-600">LC</span>
+                                </div>
+                                <div>
+                                    <div class="font-semibold">Lisa Chen</div>
+                                    <div class="text-sm text-muted-foreground">Luna Jewelry Studio</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="logo-icon">M</div>
+                        <span class="text-xl font-bold">MarketHub</span>
+                    </div>
+                    <p class="text-gray-400">
+                        Connecting local markets with quality vendors through innovative technology.
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">Product</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="markets.html" class="hover:text-white">Find Markets</a></li>
+                        <li><a href="#" class="hover:text-white">Features</a></li>
+                        <li><a href="#" class="hover:text-white">Pricing</a></li>
+                        <li><a href="#" class="hover:text-white">API</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">Company</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">About</a></li>
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
+                        <li><a href="#" class="hover:text-white">Careers</a></li>
+                        <li><a href="#" class="hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white">Status</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 MarketHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

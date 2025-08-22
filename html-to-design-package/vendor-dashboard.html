@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard - MarketHub</title>
+    <meta name="description" content="Manage your market applications, track document status, and discover new opportunities on MarketHub.">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='65' font-family='Arial' font-size='60' font-weight='bold' text-anchor='middle' fill='white'>M</text></svg>">
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">M</div>
+                    <span class="logo-text">MarketHub</span>
+                </a>
+                
+                <nav class="nav">
+                    <a href="vendor-dashboard.html" class="nav-link text-green-600">Dashboard</a>
+                    <a href="markets.html" class="nav-link">Browse Markets</a>
+                    <a href="#" class="nav-link">Documents</a>
+                    <div class="relative">
+                        <button class="btn btn-outline btn-sm">
+                            👤 Demo Vendor
+                        </button>
+                    </div>
+                </nav>
+                
+                <button class="mobile-menu" id="mobile-menu" onclick="toggleMobileMenu()">
+                    ☰
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="min-h-screen py-8">
+        <div class="container">
+            <!-- Welcome Section -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome back, Demo Vendor! 👋</h1>
+                <p class="text-gray-600">Here's what's happening with your market applications and business.</p>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-muted-foreground">Active Applications</p>
+                                <p class="text-2xl font-bold">3</p>
+                            </div>
+                            <span class="icon icon-file-check text-green-600"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-muted-foreground">Approved Markets</p>
+                                <p class="text-2xl font-bold">2</p>
+                            </div>
+                            <span class="icon icon-star text-green-600"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-muted-foreground">Documents Status</p>
+                                <p class="text-2xl font-bold text-green-600">✓ Valid</p>
+                            </div>
+                            <span class="icon icon-file-check text-green-600"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-muted-foreground">Profile Views</p>
+                                <p class="text-2xl font-bold">127</p>
+                            </div>
+                            <span class="icon icon-users text-green-600"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Main Content -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Recent Applications -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="flex justify-between items-center">
+                                <h2 class="card-title">Recent Applications</h2>
+                                <a href="markets.html" class="btn btn-sm btn-outline">Browse Markets</a>
+                            </div>
+                            <p class="card-description">Track the status of your market applications</p>
+                        </div>
+                        <div class="card-content">
+                            <div id="applications-container" class="space-y-4">
+                                <!-- Applications will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Events -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Upcoming Market Events</h2>
+                            <p class="card-description">Your scheduled market appearances</p>
+                        </div>
+                        <div class="card-content">
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                    <div class="text-green-600 font-bold text-lg">
+                                        JAN<br>
+                                        <span class="text-2xl">20</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-semibold">Downtown Farmers Market</h3>
+                                        <p class="text-sm text-muted-foreground">Saturday, 8:00 AM - 2:00 PM</p>
+                                        <p class="text-sm text-muted-foreground">123 Main St, Downtown</p>
+                                    </div>
+                                    <span class="badge badge-default">Confirmed</span>
+                                </div>
+                                
+                                <div class="flex items-center gap-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                    <div class="text-blue-600 font-bold text-lg">
+                                        JAN<br>
+                                        <span class="text-2xl">27</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-semibold">Artisan Craft Fair</h3>
+                                        <p class="text-sm text-muted-foreground">Sunday, 10:00 AM - 4:00 PM</p>
+                                        <p class="text-sm text-muted-foreground">456 Oak Ave, Midtown</p>
+                                    </div>
+                                    <span class="badge badge-secondary">Pending Setup</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Quick Actions</h3>
+                        </div>
+                        <div class="card-content space-y-3">
+                            <a href="markets.html" class="btn btn-primary w-full">
+                                Find New Markets
+                            </a>
+                            <button class="btn btn-outline w-full">
+                                Upload Documents
+                            </button>
+                            <button class="btn btn-outline w-full">
+                                Update Profile
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Document Status -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Document Status</h3>
+                        </div>
+                        <div class="card-content space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Business License</span>
+                                <span class="badge badge-default">Valid</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Insurance Certificate</span>
+                                <span class="badge badge-default">Valid</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Health Permit</span>
+                                <span class="badge badge-secondary">Expires in 45 days</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Product Menu</span>
+                                <span class="badge badge-default">Updated</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Insights -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Performance</h3>
+                        </div>
+                        <div class="card-content space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Application Success Rate</span>
+                                <span class="font-semibold text-green-600">85%</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Average Response Time</span>
+                                <span class="font-semibold">2.3 days</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Profile Completeness</span>
+                                <span class="font-semibold text-green-600">95%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recommended for You</h3>
+                        </div>
+                        <div class="card-content space-y-3">
+                            <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                <h4 class="font-semibold text-sm mb-1">Weekend Food Festival</h4>
+                                <p class="text-xs text-muted-foreground mb-2">Perfect match for your cuisine type</p>
+                                <button class="btn btn-sm btn-primary">Apply Now</button>
+                            </div>
+                            
+                            <div class="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                                <h4 class="font-semibold text-sm mb-1">Holiday Craft Market</h4>
+                                <p class="text-xs text-muted-foreground mb-2">High foot traffic location</p>
+                                <button class="btn btn-sm btn-outline">Learn More</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="container">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="logo-icon">M</div>
+                        <span class="text-xl font-bold">MarketHub</span>
+                    </div>
+                    <p class="text-gray-400">
+                        Connecting local markets with quality vendors through innovative technology.
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">Product</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="markets.html" class="hover:text-white">Find Markets</a></li>
+                        <li><a href="#" class="hover:text-white">Features</a></li>
+                        <li><a href="#" class="hover:text-white">Pricing</a></li>
+                        <li><a href="#" class="hover:text-white">API</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">Company</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">About</a></li>
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
+                        <li><a href="#" class="hover:text-white">Careers</a></li>
+                        <li><a href="#" class="hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white">Status</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 MarketHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

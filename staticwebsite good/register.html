@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - MarketHub</title>
+    <meta name="description" content="Join MarketHub as a market organizer or vendor. Streamline your market operations with our comprehensive platform.">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='65' font-family='Arial' font-size='60' font-weight='bold' text-anchor='middle' fill='white'>M</text></svg>">
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
+    <div class="card w-full max-w-lg">
+        <div class="card-header text-center">
+            <div class="flex justify-center mb-4">
+                <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-2xl">M</span>
+                </div>
+            </div>
+            <h1 class="card-title text-2xl">Create your MarketHub account</h1>
+            <p class="card-description">
+                Join thousands of market organizers and vendors
+            </p>
+        </div>
+        
+        <div class="card-content">
+            <!-- Registration Form -->
+            <form id="register-form" class="space-y-4">
+                <!-- Role Selection -->
+                <div class="form-group">
+                    <label class="label">I am a...</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <button 
+                            type="button" 
+                            class="btn btn-outline text-left p-4 h-auto"
+                            data-role="market_organizer"
+                        >
+                            <div>
+                                <div class="font-semibold mb-1">Market Organizer</div>
+                                <div class="text-sm text-muted-foreground">I manage farmers markets, craft fairs, or festivals</div>
+                            </div>
+                        </button>
+                        
+                        <button 
+                            type="button" 
+                            class="btn btn-outline text-left p-4 h-auto"
+                            data-role="vendor"
+                        >
+                            <div>
+                                <div class="font-semibold mb-1">Vendor</div>
+                                <div class="text-sm text-muted-foreground">I sell products at markets and events</div>
+                            </div>
+                        </button>
+                    </div>
+                    <input type="hidden" id="role" name="role" required>
+                </div>
+
+                <!-- Personal Information -->
+                <div class="form-group">
+                    <label for="name" class="label">Full Name</label>
+                    <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        class="input"
+                        placeholder="Enter your full name"
+                        required
+                        autocomplete="name"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="label">Email Address</label>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        class="input"
+                        placeholder="Enter your email"
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+
+                <!-- Business Information (shown based on role) -->
+                <div id="business-info" class="form-group" style="display: none;">
+                    <label for="businessName" class="label">Business Name</label>
+                    <input
+                        id="businessName"
+                        name="businessName"
+                        type="text"
+                        class="input"
+                        placeholder="Enter your business name"
+                        autocomplete="organization"
+                    >
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="registerPassword" class="label">Password</label>
+                    <input
+                        id="registerPassword"
+                        name="password"
+                        type="password"
+                        class="input"
+                        placeholder="Create a password (min. 8 characters)"
+                        required
+                        autocomplete="new-password"
+                        minlength="8"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword" class="label">Confirm Password</label>
+                    <input
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type="password"
+                        class="input"
+                        placeholder="Confirm your password"
+                        required
+                        autocomplete="new-password"
+                        minlength="8"
+                    >
+                </div>
+
+                <!-- Terms and Privacy -->
+                <div class="form-group">
+                    <label class="flex items-start gap-3">
+                        <input type="checkbox" required class="mt-1">
+                        <span class="text-sm text-gray-600">
+                            I agree to the <a href="#" class="text-green-600 hover:text-green-500">Terms of Service</a> 
+                            and <a href="#" class="text-green-600 hover:text-green-500">Privacy Policy</a>
+                        </span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="flex items-start gap-3">
+                        <input type="checkbox">
+                        <span class="text-sm text-gray-600">
+                            Send me updates about new markets and features (optional)
+                        </span>
+                    </label>
+                </div>
+
+                <button 
+                    type="submit" 
+                    id="submit-btn"
+                    class="btn btn-primary w-full"
+                >
+                    Create Account
+                </button>
+            </form>
+
+            <!-- Login Link -->
+            <div class="mt-6 text-center text-sm">
+                <span class="text-gray-600">Already have an account? </span>
+                <a href="login.html" class="font-medium text-green-600 hover:text-green-500">
+                    Sign in
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Role Benefits -->
+    <div class="fixed bottom-4 left-4 max-w-sm">
+        <div id="role-benefits" class="card bg-green-50 border-green-200" style="display: none;">
+            <div class="card-content">
+                <h3 class="font-semibold text-green-900 mb-2" id="benefits-title">Benefits</h3>
+                <ul class="text-sm text-green-700 space-y-1" id="benefits-list">
+                    <!-- Benefits will be populated by JavaScript -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced registration functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const roleButtons = document.querySelectorAll('[data-role]');
+            const roleInput = document.getElementById('role');
+            const businessInfo = document.getElementById('business-info');
+            const roleBenefits = document.getElementById('role-benefits');
+            const benefitsTitle = document.getElementById('benefits-title');
+            const benefitsList = document.getElementById('benefits-list');
+            
+            const benefits = {
+                market_organizer: [
+                    'Streamlined vendor application management',
+                    'Automated document verification',
+                    'Real-time application tracking',
+                    'Email notification system',
+                    'Vendor performance analytics'
+                ],
+                vendor: [
+                    'Discover new market opportunities',
+                    'One-click applications with verified docs',
+                    'Application status tracking',
+                    'Document expiry reminders',
+                    'Market recommendation engine'
+                ]
+            };
+            
+            roleButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    roleButtons.forEach(btn => {
+                        btn.classList.remove('btn-primary');
+                        btn.classList.add('btn-outline');
+                    });
+                    
+                    // Add active class to clicked button
+                    button.classList.remove('btn-outline');
+                    button.classList.add('btn-primary');
+                    
+                    // Set role value
+                    const role = button.dataset.role;
+                    roleInput.value = role;
+                    
+                    // Show/hide business info for vendors
+                    if (role === 'vendor') {
+                        businessInfo.style.display = 'block';
+                        document.getElementById('businessName').required = true;
+                    } else {
+                        businessInfo.style.display = 'none';
+                        document.getElementById('businessName').required = false;
+                    }
+                    
+                    // Show role benefits
+                    benefitsTitle.textContent = role === 'market_organizer' ? 'Organizer Benefits' : 'Vendor Benefits';
+                    benefitsList.innerHTML = benefits[role].map(benefit => `<li>• ${benefit}</li>`).join('');
+                    roleBenefits.style.display = 'block';
+                });
+            });
+            
+            // Auto-select role from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const roleParam = urlParams.get('role');
+            if (roleParam) {
+                const button = document.querySelector(`[data-role="${roleParam}"]`);
+                if (button) {
+                    button.click();
+                }
+            }
+        });
+    </script>
+    <script src="js/app.js"></script>
+</body>
+</html>

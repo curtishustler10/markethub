@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - MarketHub</title>
+    <meta name="description" content="Sign in to your MarketHub account to manage your markets, vendor applications, and more.">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='65' font-family='Arial' font-size='60' font-weight='bold' text-anchor='middle' fill='white'>M</text></svg>">
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
+    <div class="card w-full max-w-md">
+        <div class="card-header text-center">
+            <div class="flex justify-center mb-4">
+                <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-2xl">M</span>
+                </div>
+            </div>
+            <h1 class="card-title text-2xl">Sign in to MarketHub</h1>
+            <p class="card-description">
+                Enter your email and password to access your account
+            </p>
+        </div>
+        
+        <div class="card-content">
+            <!-- Login Method Toggle -->
+            <div class="flex justify-center space-x-4 mb-6">
+                <button 
+                    id="password-btn" 
+                    class="btn btn-sm btn-primary"
+                >
+                    Password
+                </button>
+                <button 
+                    id="magic-link-btn" 
+                    class="btn btn-sm btn-outline"
+                >
+                    Magic Link
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="space-y-4">
+                <div class="form-group">
+                    <label for="email" class="label">Email</label>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        class="input"
+                        placeholder="Enter your email"
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+
+                <div id="password-field" class="form-group">
+                    <label for="password" class="label">Password</label>
+                    <div class="relative">
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            class="input"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                        >
+                        <button
+                            type="button"
+                            id="password-toggle"
+                            class="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent btn btn-sm"
+                            style="background: transparent; border: none;"
+                        >
+                            <span class="icon icon-eye"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <button 
+                    type="submit" 
+                    id="submit-btn"
+                    class="btn btn-primary w-full"
+                >
+                    Sign In
+                </button>
+            </form>
+
+            <!-- Links -->
+            <div class="mt-6 text-center text-sm">
+                <span class="text-gray-600">Don't have an account? </span>
+                <a href="register.html" class="font-medium text-green-600 hover:text-green-500">
+                    Sign up
+                </a>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a href="#" class="text-sm text-gray-600 hover:text-green-600">
+                    Forgot your password?
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Credentials Notice -->
+    <div class="fixed bottom-4 right-4 max-w-sm">
+        <div class="card bg-blue-50 border-blue-200">
+            <div class="card-content">
+                <h3 class="font-semibold text-blue-900 mb-2">Demo Credentials</h3>
+                <p class="text-sm text-blue-700 mb-2">Try the demo with any email and password (minimum 8 characters)</p>
+                <div class="text-xs text-blue-600">
+                    <div>📧 demo@example.com</div>
+                    <div>🔑 password123</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
