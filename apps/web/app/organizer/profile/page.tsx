@@ -6,8 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { User, Save, Camera } from 'lucide-react'
+import { User, Save, Camera, AlertCircle } from 'lucide-react'
 import { DashboardShell } from '@/components/dashboard/dashboard-shell'
+import { createClient } from '@/lib/supabase/client'
 
 export default function OrganizerProfilePage() {
   const [profile, setProfile] = useState({
@@ -25,21 +26,82 @@ export default function OrganizerProfilePage() {
   
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [initialLoading, setInitialLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Load profile data on mount
+  useEffect(() => {
+    loadProfile()
+  }, [])
+
+  const loadProfile = async () => {
+    try {
+      setInitialLoading(true)
+      const response = await fetch('/api/organizer/profile')
+      
+      if (!response.ok) {
+        throw new Error('Failed to load profile')
+      }
+      
+      const data = await response.json()
+      if (data.profile) {
+        setProfile({
+          name: data.profile.name || '',
+          email: data.profile.email || '',
+          phone: data.profile.phone || '',
+          organization: data.profile.organization || '',
+          website: data.profile.website || '',
+          bio: data.profile.bio || '',
+          address: data.profile.address || '',
+          city: data.profile.city || '',
+          state: data.profile.state || '',
+          postcode: data.profile.postcode || ''
+        })
+      }
+    } catch (error) {
+      console.error('Error loading profile:', error)
+      setError('Failed to load profile data')
+    } finally {
+      setInitialLoading(false)
+    }
+  }
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setError(null)
     
     try {
-      // TODO: Implement profile update API call
-      await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate API call
+      const response = await fetch('/api/organizer/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profile),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to save profile')
+      }
+
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     } catch (error) {
       console.error('Error saving profile:', error)
+      setError('Failed to save profile. Please try again.')
     } finally {
       setLoading(false)
     }
+  }
+
+  if (initialLoading) {
+    return (
+      <DashboardShell>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      </DashboardShell>
+    )
   }
 
   return (
@@ -51,6 +113,13 @@ export default function OrganizerProfilePage() {
             Manage your organizer profile information and preferences.
           </p>
         </div>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-2">
+            <AlertCircle className="w-5 h-5 text-red-600" />
+            <p className="text-red-800">{error}</p>
+          </div>
+        )}
 
         <div className="grid gap-6">
           {/* Profile Photo Section */}
