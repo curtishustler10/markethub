@@ -115,17 +115,27 @@ export default function MapWithList({ searchMode, searchQuery, className = '' }:
       switch (sortBy) {
         case 'name':
           if (searchMode === 'market') {
-            return (a as Market).name.localeCompare((b as Market).name)
+            const nameA = (a as Market).name || ''
+            const nameB = (b as Market).name || ''
+            return nameA.localeCompare(nameB)
           } else {
-            return (a as Vendor).business_name.localeCompare((b as Vendor).business_name)
+            const nameA = (a as Vendor).business_name || ''
+            const nameB = (b as Vendor).business_name || ''
+            return nameA.localeCompare(nameB)
           }
         case 'location':
           if (searchMode === 'market') {
             const marketA = a as Market
             const marketB = b as Market
-            return `${marketA.city}, ${marketA.state}`.localeCompare(`${marketB.city}, ${marketB.state}`)
+            const locationA = `${marketA.city || ''}, ${marketA.state || ''}`.trim()
+            const locationB = `${marketB.city || ''}, ${marketB.state || ''}`.trim()
+            return locationA.localeCompare(locationB)
           } else {
-            return (a as Vendor).region.localeCompare((b as Vendor).region)
+            const vendorA = a as Vendor
+            const vendorB = b as Vendor
+            const regionA = vendorA.region || vendorA.state || ''
+            const regionB = vendorB.region || vendorB.state || ''
+            return regionA.localeCompare(regionB)
           }
         case 'date':
           // For markets, sort by next event date
@@ -143,7 +153,14 @@ export default function MapWithList({ searchMode, searchQuery, className = '' }:
     })
   }
 
-  const sortedItems = sortItems(filteredItems)
+  // Safe sorting with error handling
+  let sortedItems: (Market | Vendor)[] = []
+  try {
+    sortedItems = sortItems(filteredItems)
+  } catch (error) {
+    console.warn('Sorting failed, using original order:', error)
+    sortedItems = filteredItems
+  }
 
   const renderMarketCard = (market: Market) => (
     <Card key={market.id} className="hover:shadow-lg transition-shadow cursor-pointer">
