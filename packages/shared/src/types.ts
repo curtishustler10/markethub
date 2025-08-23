@@ -31,6 +31,9 @@ export interface Market {
   lng: number | null;
   amenities: Record<string, any>;
   requirements: Record<string, any>;
+  is_verified: boolean;
+  verified_at: string | null;
+  verified_by: string | null;
   status: MarketStatus;
   created_at: string;
   updated_at: string;
@@ -75,6 +78,9 @@ export interface VendorProfile {
   claimed_profile_id: string | null;
   claimed_at: string | null;
   claimed_by: string | null;
+  is_verified: boolean;
+  verified_at: string | null;
+  verified_by: string | null;
   created_at: string;
   updated_at: string;
   vendor?: Profile;

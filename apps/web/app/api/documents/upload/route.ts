@@ -44,6 +44,20 @@ export async function POST(request: NextRequest) {
       
       storagePath = `market-docs/${marketId}/${type}-${Date.now()}`
       isMarketDocument = true
+
+      // Mark market as verified
+      const { error: marketVerifyError } = await supabase
+        .from('markets')
+        .update({
+          is_verified: true,
+          verified_at: new Date().toISOString(),
+          verified_by: profile.id
+        })
+        .eq('id', marketId)
+
+      if (marketVerifyError) {
+        console.error('Error verifying market:', marketVerifyError)
+      }
     } else {
       // Vendor document
       if (profile.role !== 'vendor' && profile.role !== 'admin') {
@@ -54,6 +68,20 @@ export async function POST(request: NextRequest) {
       }
       
       storagePath = `vendor-docs/${profile.id}/${type}-${Date.now()}`
+
+      // Mark vendor profile as verified
+      const { error: vendorVerifyError } = await supabase
+        .from('vendor_profiles')
+        .update({
+          is_verified: true,
+          verified_at: new Date().toISOString(),
+          verified_by: profile.id
+        })
+        .or(`vendor_id.eq.${profile.id},claimed_profile_id.eq.${profile.id}`)
+
+      if (vendorVerifyError) {
+        console.error('Error verifying vendor profile:', vendorVerifyError)
+      }
     }
 
     // Generate signed upload URL
