@@ -1,0 +1,5 @@
+[
+  { "id": 1, "name": "Austin Farmers Market", "state": "Texas", "coordinates": [-97.7431, 30.2672] },
+  { "id": 2, "name": "Houston Market", "state": "Texas", "coordinates": [-95.3698, 29.7604] },
+  { "id": 3, "name": "San Francisco Farmers Market", "state": "California", "coordinates": [-122.4194, 37.7749] }
+]
