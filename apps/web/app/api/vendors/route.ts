@@ -14,27 +14,31 @@ export async function GET(request: NextRequest) {
     
     // Query vendor profiles with coordinates
     let query = supabase
-      .from('profiles')
+      .from('vendor_profiles')
       .select(`
-        id,
-        name,
+        vendor_id,
         business_name,
-        phone,
-        email,
-        bio,
-        lat,
-        lng,
-        city,
-        state,
-        created_at
+        category,
+        region,
+        products_summary,
+        website,
+        profiles!inner (
+          id,
+          name,
+          phone,
+          email,
+          lat,
+          lng,
+          city,
+          state
+        )
       `)
-      .eq('role', 'vendor')
-      .not('lat', 'is', null)
-      .not('lng', 'is', null)
+      .not('profiles.lat', 'is', null)
+      .not('profiles.lng', 'is', null)
 
     // Apply search filter
     if (search) {
-      query = query.or(`name.ilike.%${search}%,business_name.ilike.%${search}%,bio.ilike.%${search}%`)
+      query = query.or(`business_name.ilike.%${search}%,category.ilike.%${search}%,region.ilike.%${search}%,products_summary.ilike.%${search}%`)
     }
 
     // Get results with pagination
@@ -47,17 +51,23 @@ export async function GET(request: NextRequest) {
     }
 
     // Transform data to match map expectations
-    const transformedVendors = (vendors || []).map(vendor => ({
-      id: vendor.id,
-      name: vendor.business_name || vendor.name || 'Unnamed Vendor',
-      description: vendor.bio,
-      lat: vendor.lat,
-      lng: vendor.lng,
-      city: vendor.city,
-      state: vendor.state,
-      phone: vendor.phone,
-      email: vendor.email
-    }))
+    const transformedVendors = (vendors || []).map(vendor => {
+      const profile = Array.isArray(vendor.profiles) ? vendor.profiles[0] : vendor.profiles
+      return {
+        id: vendor.vendor_id,
+        business_name: vendor.business_name || 'Unnamed Vendor',
+        category: vendor.category || 'vendor',
+        region: vendor.region || profile?.state || 'Unknown',
+        products_summary: vendor.products_summary,
+        website: vendor.website,
+        lat: profile?.lat,
+        lng: profile?.lng,
+        city: profile?.city,
+        state: profile?.state,
+        phone: profile?.phone,
+        email: profile?.email
+      }
+    })
 
     return NextResponse.json({
       vendors: transformedVendors,

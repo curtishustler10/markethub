@@ -12,7 +12,9 @@
     "start": "turbo run start",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "type-check": "turbo run type-check"
+    "type-check": "turbo run type-check",
+    "check-markets": "node check_markets_status.js",
+    "populate-markets": "node populate_sample_markets.js"
   },
   "devDependencies": {
     "turbo": "^1.13.0"

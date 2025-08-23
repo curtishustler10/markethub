@@ -6,7 +6,7 @@ import { Users, FileCheck, MapPin, Search, Store, User } from 'lucide-react'
 import { LayoutProvider } from '@/components/providers/layout-provider'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import InteractiveMap from '@/components/ui/interactive-map'
+import MapWithList from '@/components/ui/map-with-list'
 
 export default function HomePage() {
   const [searchMode, setSearchMode] = useState<'vendor' | 'market'>('market')
@@ -94,10 +94,10 @@ export default function HomePage() {
                     <><User className="mr-2 w-4 h-4" /><span>Searching Vendors</span></>
                   )}
                 </div>
-                <InteractiveMap 
+                <MapWithList 
                   searchMode={searchMode}
                   searchQuery={searchQuery}
-                  className="w-full h-96"
+                  className="w-full"
                 />
               </div>
             </div>
