@@ -72,6 +72,9 @@ export interface VendorProfile {
   heard_about: string | null;
   consent_email: boolean;
   consent_sms: boolean;
+  claimed_profile_id: string | null;
+  claimed_at: string | null;
+  claimed_by: string | null;
   created_at: string;
   updated_at: string;
   vendor?: Profile;

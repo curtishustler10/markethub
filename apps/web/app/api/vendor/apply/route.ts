@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     const { data: vendorProfile } = await supabase
       .from('vendor_profiles')
       .select('vendor_id')
-      .eq('vendor_id', profile.id)
+      .or(`vendor_id.eq.${profile.id},claimed_profile_id.eq.${profile.id}`)
       .single()
 
     if (!vendorProfile) {
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
           name,
           email
         ),
-        vendor_profile:vendor_profiles!vendor_id (
+        vendor_profile:vendor_profiles!claimed_profile_id (
           business_name,
           category
         )

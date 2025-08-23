@@ -176,7 +176,15 @@ INSERT INTO market_documents (
         'valid'
     );
 
--- Create sample vendor profile
+INSERT INTO imported_vendors (id, name, email, phone, source)
+VALUES (
+    '33333333-3333-3333-3333-333333333333',
+    'Fresh Farm Produce',
+    'vendor@example.com',
+    '+61400000002',
+    'seed'
+);
+
 INSERT INTO vendor_profiles (
     vendor_id,
     business_name,
@@ -194,7 +202,10 @@ INSERT INTO vendor_profiles (
     preferred_start_date,
     heard_about,
     consent_email,
-    consent_sms
+    consent_sms,
+    claimed_profile_id,
+    claimed_at,
+    claimed_by
 ) VALUES (
     '33333333-3333-3333-3333-333333333333',
     'Fresh Farm Produce',
@@ -212,7 +223,10 @@ INSERT INTO vendor_profiles (
     '2024-03-01',
     'Google search',
     true,
-    false
+    false,
+    '33333333-3333-3333-3333-333333333333',
+    NOW(),
+    '33333333-3333-3333-3333-333333333333'
 );
 
 -- Create sample vendor documents

@@ -58,9 +58,20 @@ CREATE TABLE market_documents (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Create imported_vendors table
+CREATE TABLE imported_vendors (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT,
+    email TEXT,
+    phone TEXT,
+    source TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Create vendor_profiles table
 CREATE TABLE vendor_profiles (
-    vendor_id UUID PRIMARY KEY REFERENCES profiles(id) ON DELETE CASCADE,
+    vendor_id UUID PRIMARY KEY,
     business_name TEXT,
     phone TEXT,
     address TEXT,
@@ -79,6 +90,9 @@ CREATE TABLE vendor_profiles (
     heard_about TEXT,
     consent_email BOOLEAN DEFAULT FALSE,
     consent_sms BOOLEAN DEFAULT FALSE,
+    claimed_profile_id UUID REFERENCES profiles(id),
+    claimed_at TIMESTAMPTZ,
+    claimed_by UUID REFERENCES profiles(id),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );

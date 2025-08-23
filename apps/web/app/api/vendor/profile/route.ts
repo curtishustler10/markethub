@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
       .from('vendor_profiles')
       .select(`
         *,
-        vendor:profiles!vendor_id (
+        vendor:profiles!claimed_profile_id (
           id,
           name,
           email,
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
           created_at
         )
       `)
-      .eq('vendor_id', profile.id)
+      .or(`vendor_id.eq.${profile.id},claimed_profile_id.eq.${profile.id}`)
       .single()
 
     if (error && error.code !== 'PGRST116') {
@@ -72,7 +72,7 @@ export async function PUT(request: NextRequest) {
     const { data: existingProfile } = await supabase
       .from('vendor_profiles')
       .select('vendor_id')
-      .eq('vendor_id', profile.id)
+      .or(`vendor_id.eq.${profile.id},claimed_profile_id.eq.${profile.id}`)
       .single()
 
     let vendorProfile
@@ -84,10 +84,10 @@ export async function PUT(request: NextRequest) {
       const { data, error } = await supabase
         .from('vendor_profiles')
         .update(validatedData)
-        .eq('vendor_id', profile.id)
+        .or(`vendor_id.eq.${profile.id},claimed_profile_id.eq.${profile.id}`)
         .select(`
           *,
-          vendor:profiles!vendor_id (
+          vendor:profiles!claimed_profile_id (
             id,
             name,
             email,
@@ -114,11 +114,12 @@ export async function PUT(request: NextRequest) {
         .from('vendor_profiles')
         .insert({
           ...validatedData,
-          vendor_id: profile.id
+          vendor_id: profile.id,
+          claimed_profile_id: profile.id
         })
         .select(`
           *,
-          vendor:profiles!vendor_id (
+          vendor:profiles!claimed_profile_id (
             id,
             name,
             email,

@@ -194,7 +194,7 @@ export const sendDocumentExpiringEmail = inngest.createFunction(
               name,
               email
             ),
-            vendor_profile:vendor_profiles!vendor_id (
+            vendor_profile:vendor_profiles!claimed_profile_id (
               business_name
             )
           `)

@@ -96,8 +96,18 @@ CREATE TABLE IF NOT EXISTS market_documents (
 );
 
 -- Create vendor_profiles table
+CREATE TABLE IF NOT EXISTS imported_vendors (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT,
+    email TEXT,
+    phone TEXT,
+    source TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS vendor_profiles (
-    vendor_id UUID PRIMARY KEY REFERENCES profiles(id) ON DELETE CASCADE,
+    vendor_id UUID PRIMARY KEY,
     business_name TEXT,
     phone TEXT,
     address TEXT,
@@ -116,6 +126,9 @@ CREATE TABLE IF NOT EXISTS vendor_profiles (
     heard_about TEXT,
     consent_email BOOLEAN DEFAULT FALSE,
     consent_sms BOOLEAN DEFAULT FALSE,
+    claimed_profile_id UUID REFERENCES profiles(id),
+    claimed_at TIMESTAMPTZ,
+    claimed_by UUID REFERENCES profiles(id),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -219,6 +232,7 @@ CREATE TRIGGER update_feature_flags_updated_at BEFORE UPDATE ON feature_flags FO
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE markets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE market_documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE imported_vendors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vendor_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vendor_documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vendor_applications ENABLE ROW LEVEL SECURITY;
@@ -287,16 +301,20 @@ CREATE POLICY "Vendors can view market documents for application" ON market_docu
 
 -- Note: Admin policy removed to prevent infinite recursion with profiles table
 
+-- Imported vendors policies
+CREATE POLICY "Service role can manage imported vendors" ON imported_vendors
+    FOR ALL USING (auth.role() = 'service_role');
+
 -- Vendor profiles policies
 CREATE POLICY "Vendors can manage own profile" ON vendor_profiles
-    FOR ALL USING (vendor_id = auth.uid());
+    FOR ALL USING (vendor_id = auth.uid() OR claimed_profile_id = auth.uid());
 
 CREATE POLICY "Market owners can view vendor profiles for applications" ON vendor_profiles
     FOR SELECT USING (
         EXISTS (
             SELECT 1 FROM vendor_applications va
             JOIN markets m ON m.id = va.market_id
-            WHERE va.vendor_id = vendor_profiles.vendor_id
+            WHERE va.vendor_id = vendor_profiles.claimed_profile_id
             AND m.owner_id = auth.uid()
         )
     );
