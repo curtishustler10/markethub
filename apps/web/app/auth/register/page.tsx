@@ -30,7 +30,7 @@ function RegisterForm() {
 
     try {
       const supabase = createClient()
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -44,6 +44,34 @@ function RegisterForm() {
 
       if (error) {
         throw error
+      }
+
+      // Look for imported records that match the provided name
+      try {
+        const searchRes = await fetch('/api/auth/search-imported', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, role })
+        })
+
+        const searchData = await searchRes.json()
+        const matches = searchData.matches as any[]
+        if (matches && matches.length > 0 && data.user) {
+          const match = matches[0]
+          if (window.confirm(`We found a record for "${match.name}". Is this you?`)) {
+            await fetch('/api/auth/claim', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                userId: data.user.id,
+                role,
+                recordId: match.id
+              })
+            })
+          }
+        }
+      } catch (err) {
+        console.error('Error searching imported records', err)
       }
 
       toast({
