@@ -163,7 +163,16 @@ export default function MapWithList({ searchMode, searchQuery, className = '' }:
   }
 
   const renderMarketCard = (market: Market) => (
-    <Card key={market.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+    <Card 
+      key={market.id} 
+      className="hover:shadow-lg transition-shadow cursor-pointer"
+      onClick={() => {
+        // Focus map on this market when clicking the entire card
+        if (mapRef.current && market.lat && market.lng) {
+          mapRef.current.focusOnMarket(market.lat, market.lng, market.name)
+        }
+      }}
+    >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <CardTitle className="text-lg leading-tight">{market.name}</CardTitle>
@@ -210,24 +219,14 @@ export default function MapWithList({ searchMode, searchQuery, className = '' }:
           </div>
         )}
 
-        <div className="mt-3 flex gap-2">
+        <div className="mt-3">
           <Button 
-            variant="outline" 
             size="sm" 
-            className="flex-1"
-            onClick={() => {
-              // Focus map on this market
-              if (mapRef.current && market.lat && market.lng) {
-                mapRef.current.focusOnMarket(market.lat, market.lng, market.name)
-              }
+            className="w-full bg-green-600 hover:bg-green-700"
+            onClick={(e) => {
+              e.stopPropagation() // Prevent triggering the card click
+              window.location.href = `/markets/${market.id}/apply`
             }}
-          >
-            Focus on Map
-          </Button>
-          <Button 
-            size="sm" 
-            className="flex-1 bg-green-600 hover:bg-green-700"
-            onClick={() => window.location.href = `/markets/${market.id}/apply`}
           >
             Apply
           </Button>
@@ -237,7 +236,16 @@ export default function MapWithList({ searchMode, searchQuery, className = '' }:
   )
 
   const renderVendorCard = (vendor: Vendor) => (
-    <Card key={vendor.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+    <Card 
+      key={vendor.id} 
+      className="hover:shadow-lg transition-shadow cursor-pointer"
+      onClick={() => {
+        // Focus map on this vendor when clicking the entire card
+        if (mapRef.current && vendor.lat && vendor.lng) {
+          mapRef.current.focusOnMarket(vendor.lat, vendor.lng, vendor.business_name)
+        }
+      }}
+    >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <CardTitle className="text-lg leading-tight">{vendor.business_name}</CardTitle>
@@ -271,25 +279,15 @@ export default function MapWithList({ searchMode, searchQuery, className = '' }:
           )}
         </div>
 
-        <div className="mt-3 flex gap-2">
+        <div className="mt-3">
           <Button 
             variant="outline" 
             size="sm" 
-            className="flex-1"
-            onClick={() => {
-              // Focus map on this vendor
-              if (mapRef.current && vendor.lat && vendor.lng) {
-                mapRef.current.focusOnMarket(vendor.lat, vendor.lng, vendor.business_name)
-              }
+            className="w-full"
+            onClick={(e) => {
+              e.stopPropagation() // Prevent triggering the card click
+              window.location.href = `/vendors/${vendor.id}`
             }}
-          >
-            Focus on Map
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="flex-1"
-            onClick={() => window.location.href = `/vendors/${vendor.id}`}
           >
             View Profile
           </Button>
