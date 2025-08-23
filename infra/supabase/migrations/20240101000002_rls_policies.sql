@@ -2,6 +2,7 @@
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE markets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE market_documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE imported_vendors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vendor_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vendor_documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vendor_applications ENABLE ROW LEVEL SECURITY;
@@ -77,14 +78,20 @@ CREATE POLICY "Admins can manage all market documents" ON market_documents
 
 -- Vendor profiles policies
 CREATE POLICY "Vendors can manage own profile" ON vendor_profiles
-    FOR ALL USING (vendor_id = auth.uid());
+    FOR ALL USING (
+        vendor_id = auth.uid() OR claimed_profile_id = auth.uid()
+    );
+
+-- Imported vendors policies
+CREATE POLICY "Service role can manage imported vendors" ON imported_vendors
+    FOR ALL USING (auth.role() = 'service_role');
 
 CREATE POLICY "Market owners can view vendor profiles for applications" ON vendor_profiles
     FOR SELECT USING (
         EXISTS (
             SELECT 1 FROM vendor_applications va
             JOIN markets m ON m.id = va.market_id
-            WHERE va.vendor_id = vendor_profiles.vendor_id
+            WHERE va.vendor_id = vendor_profiles.claimed_profile_id
             AND m.owner_id = auth.uid()
         )
     );

@@ -85,14 +85,11 @@ CREATE TABLE IF NOT EXISTS vendor_profiles (
     heard_about TEXT,
     consent_email BOOLEAN DEFAULT FALSE,
     consent_sms BOOLEAN DEFAULT FALSE,
+    claimed_profile_id UUID REFERENCES profiles(id),
+    claimed_at TIMESTAMPTZ,
+    claimed_by UUID REFERENCES profiles(id),
     created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW(),
-    
-    -- Foreign key that can reference either profiles OR imported_vendors
-    CONSTRAINT fk_vendor_profile_id 
-        FOREIGN KEY (vendor_id) 
-        REFERENCES imported_vendors(id) 
-        ON DELETE CASCADE
+    updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Create profiles table (for authenticated users only)

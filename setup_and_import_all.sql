@@ -66,8 +66,18 @@ CREATE TABLE IF NOT EXISTS profiles (
 );
 
 -- Create vendor_profiles table
+CREATE TABLE IF NOT EXISTS imported_vendors (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT,
+    email TEXT,
+    phone TEXT,
+    source TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS vendor_profiles (
-    vendor_id UUID PRIMARY KEY REFERENCES profiles(id) ON DELETE CASCADE,
+    vendor_id UUID PRIMARY KEY,
     business_name TEXT,
     phone TEXT,
     address TEXT,
@@ -86,12 +96,16 @@ CREATE TABLE IF NOT EXISTS vendor_profiles (
     heard_about TEXT,
     consent_email BOOLEAN DEFAULT FALSE,
     consent_sms BOOLEAN DEFAULT FALSE,
+    claimed_profile_id UUID REFERENCES profiles(id),
+    claimed_at TIMESTAMPTZ,
+    claimed_by UUID REFERENCES profiles(id),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Enable RLS on tables
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE imported_vendors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vendor_profiles ENABLE ROW LEVEL SECURITY;
 
 -- Create basic policies for profiles
@@ -109,7 +123,11 @@ EXCEPTION WHEN duplicate_object THEN null; END $$;
 
 -- Create policies for vendor_profiles
 DO $$ BEGIN
-    CREATE POLICY "Vendors can manage own profile" ON vendor_profiles FOR ALL USING (vendor_id = auth.uid());
+    CREATE POLICY "Service role can manage imported vendors" ON imported_vendors FOR ALL USING (auth.role() = 'service_role');
+EXCEPTION WHEN duplicate_object THEN null; END $$;
+
+DO $$ BEGIN
+    CREATE POLICY "Vendors can manage own profile" ON vendor_profiles FOR ALL USING (vendor_id = auth.uid() OR claimed_profile_id = auth.uid());
 EXCEPTION WHEN duplicate_object THEN null; END $$;
 
 -- Create updated_at triggers
