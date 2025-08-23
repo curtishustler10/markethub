@@ -90,8 +90,14 @@ const InteractiveMap = forwardRef<InteractiveMapRef, InteractiveMapProps>(
     const useMapTiler = MAPTILER_KEY && currentMapStyle !== 'mapbox_streets' && currentMapStyle !== 'mapbox_satellite'
     const useMapbox = MAPBOX_TOKEN && !MAPBOX_TOKEN.includes('test-token')
 
+    console.log('🗺️ Map initialization debug:')
+    console.log('  - MAPBOX_TOKEN:', MAPBOX_TOKEN ? 'Set' : 'Not set')
+    console.log('  - MAPTILER_KEY:', MAPTILER_KEY ? 'Set' : 'Not set')
+    console.log('  - useMapbox:', useMapbox)
+    console.log('  - useMapTiler:', useMapTiler)
+
     if (!useMapTiler && !useMapbox) {
-      setError('Map service not configured. Please set NEXT_PUBLIC_MAPTILER_KEY or NEXT_PUBLIC_MAPBOX_TOKEN.')
+      setError('Map service not configured. Please set NEXT_PUBLIC_MAPTILER_KEY or NEXT_PUBLIC_MAPTILER_KEY.')
       setLoading(false)
       return
     }
@@ -255,7 +261,7 @@ const InteractiveMap = forwardRef<InteractiveMapRef, InteractiveMapProps>(
         
         map.current?.fitBounds(bounds, {
           padding: 50,
-          maxZoom: 13
+          maxZoom: 15 // Increased from 13 to see markers better
         })
       } else if (coordinates.length === 1) {
         map.current?.flyTo({
