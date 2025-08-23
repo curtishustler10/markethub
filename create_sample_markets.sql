@@ -11,11 +11,10 @@ VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- Create sample markets
-INSERT INTO markets (id, owner_id, name, slug, description, address, city, state, postcode, country, lat, lng, amenities, requirements, status, created_at, updated_at)
+INSERT INTO imported_markets (id, name, slug, description, address, city, state, postcode, country, lat, lng, amenities, requirements, created_at, updated_at)
 VALUES 
     (
-        'market-001-southbank', 
-        'market-org-001', 
+        'market-001-southbank',  
         'South Bank Weekend Markets', 
         'south-bank-weekend-markets',
         'Brisbane''s premier weekend market featuring local produce, artisan foods, and handmade crafts. Located in the heart of South Bank with river views.',
@@ -28,13 +27,11 @@ VALUES
         153.0200,
         '{"parking": true, "toilets": true, "power": true, "water": true, "wifi": false, "loading_dock": true}',
         '{"food_licence": true, "public_liability": true, "products_list": true}',
-        'live',
         NOW(),
         NOW()
     ),
     (
-        'market-002-westend', 
-        'market-org-001', 
+        'market-002-westend',  
         'West End Farmers Market', 
         'west-end-farmers-market',
         'A vibrant community market focusing on fresh local produce, organic foods, and sustainable products. Every Saturday morning.',
@@ -47,13 +44,11 @@ VALUES
         153.0100,
         '{"parking": true, "toilets": true, "power": false, "water": true, "wifi": false, "loading_dock": false}',
         '{"food_licence": true, "public_liability": true, "organic_certification": false}',
-        'live',
         NOW(),
         NOW()
     ),
     (
-        'market-003-goldcoast', 
-        'market-org-002', 
+        'market-003-goldcoast',  
         'Surfers Paradise Beachfront Market', 
         'surfers-paradise-beachfront-market',
         'Iconic beachfront market with stunning ocean views. Features food trucks, local crafts, and beach-themed products. Open Friday to Sunday.',
@@ -66,13 +61,11 @@ VALUES
         153.4145,
         '{"parking": true, "toilets": true, "power": true, "water": true, "wifi": true, "loading_dock": true}',
         '{"food_licence": true, "public_liability": true, "tourism_permit": true}',
-        'live',
         NOW(),
         NOW()
     ),
     (
-        'market-004-browns-plains', 
-        'market-org-003', 
+        'market-004-browns-plains',  
         'Browns Plains Community Market', 
         'browns-plains-community-market',
         'Family-friendly community market serving the growing Browns Plains area. Focus on fresh produce, family meals, and local businesses.',
@@ -85,13 +78,11 @@ VALUES
         153.0400,
         '{"parking": true, "toilets": true, "power": true, "water": true, "wifi": false, "loading_dock": true}',
         '{"food_licence": true, "public_liability": true, "products_list": true}',
-        'live',
         NOW(),
         NOW()
     ),
     (
-        'market-005-northside', 
-        'market-org-004', 
+        'market-005-northside',  
         'Northside Artisan Market', 
         'northside-artisan-market',
         'Boutique market specializing in handcrafted goods, gourmet foods, and unique local products. Perfect for specialty vendors.',
@@ -104,13 +95,11 @@ VALUES
         153.0450,
         '{"parking": true, "toilets": true, "power": true, "water": true, "wifi": true, "loading_dock": false}',
         '{"food_licence": true, "public_liability": true, "artisan_certification": false}',
-        'live',
         NOW(),
         NOW()
     ),
     (
-        'market-006-greenslopes', 
-        'market-org-003', 
+        'market-006-greenslopes',  
         'Greenslopes Fresh Food Market', 
         'greenslopes-fresh-food-market',
         'Local neighborhood market focusing on fresh, healthy food options. Supporting local growers and food producers.',
@@ -123,13 +112,11 @@ VALUES
         153.0480,
         '{"parking": true, "toilets": true, "power": false, "water": true, "wifi": false, "loading_dock": false}',
         '{"food_licence": true, "public_liability": true, "health_certificate": true}',
-        'live',
         NOW(),
         NOW()
     ),
     (
-        'market-007-city', 
-        'market-org-001', 
+        'market-007-city',  
         'Brisbane CBD Lunch Market', 
         'brisbane-cbd-lunch-market',
         'Weekday lunch market in the heart of Brisbane CBD. Perfect for ready-to-eat food vendors and quick service options.',
@@ -142,13 +129,11 @@ VALUES
         153.0240,
         '{"parking": false, "toilets": true, "power": true, "water": true, "wifi": true, "loading_dock": true}',
         '{"food_licence": true, "public_liability": true, "quick_service": true}',
-        'live',
         NOW(),
         NOW()
     ),
     (
-        'market-008-beenleigh', 
-        'market-org-003', 
+        'market-008-beenleigh',  
         'Beenleigh Country Market', 
         'beenleigh-country-market',
         'Traditional country market featuring farm-fresh produce, homemade goods, and rural crafts. Monthly market on first Saturday.',
@@ -161,7 +146,6 @@ VALUES
         153.1800,
         '{"parking": true, "toilets": true, "power": false, "water": true, "wifi": false, "loading_dock": false}',
         '{"food_licence": true, "public_liability": true, "rural_products": true}',
-        'live',
         NOW(),
         NOW()
     )
