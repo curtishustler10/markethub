@@ -127,52 +127,84 @@ export default function InteractiveMap({ searchMode, searchQuery, className = ''
       const params = new URLSearchParams()
       if (searchQuery) params.set('search', searchQuery)
       
-      const response = await fetch(`/api/markets?${params}`)
+      console.log(`Fetching ${searchMode}s from API...`)
+      const apiEndpoint = searchMode === 'market' ? '/api/markets' : '/api/vendors'
+      const response = await fetch(`${apiEndpoint}?${params}`)
       const data = await response.json()
       
-      if (response.ok && data.markets) {
-        setMarkets(data.markets)
-        addMarkersToMap(data.markets)
+      console.log(`${searchMode} API response:`, data)
+      
+      if (response.ok) {
+        const items = searchMode === 'market' ? data.markets : data.vendors
+        console.log(`Found ${items?.length || 0} ${searchMode}s`)
+        
+        if (items) {
+          setMarkets(items) // We'll rename this to setItems later
+          addMarkersToMap(items)
+        } else {
+          console.warn(`No ${searchMode}s found in response`)
+          setMarkets([])
+        }
+      } else {
+        console.error(`Failed to fetch ${searchMode}s:`, data.error)
+        setMarkets([])
       }
     } catch (error) {
-      console.error('Error fetching markets:', error)
+      console.error(`Error fetching ${searchMode}s:`, error)
+      setMarkets([])
     }
   }
 
-  const addMarkersToMap = (marketsData: Market[]) => {
-    if (!map.current) return
+  const addMarkersToMap = (itemsData: any[]) => {
+    if (!map.current) {
+      console.warn('Map not initialized, cannot add markers')
+      return
+    }
+
+    console.log(`Adding ${itemsData.length} markers to map for ${searchMode}s`)
 
     // Clear existing markers
     const existingMarkers = document.querySelectorAll('.mapboxgl-marker')
     existingMarkers.forEach(marker => marker.remove())
+    console.log(`Cleared ${existingMarkers.length} existing markers`)
 
-    marketsData.forEach((market) => {
-      if (!market.lat || !market.lng) return
+    let validItems = 0
+    itemsData.forEach((item) => {
+      if (!item.lat || !item.lng) {
+        console.warn(`${searchMode} ${item.name} missing coordinates:`, item)
+        return
+      }
+
+      validItems++
+      
+      // Different colors for markets vs vendors
+      const markerColor = searchMode === 'market' ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'
+      const buttonColor = searchMode === 'market' ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'
 
       // Create marker element
       const el = document.createElement('div')
       el.className = 'marker'
       el.innerHTML = `
-        <div class="w-8 h-8 bg-green-600 rounded-full border-2 border-white shadow-lg flex items-center justify-center cursor-pointer hover:bg-green-700 transition-colors">
+        <div class="w-8 h-8 ${markerColor} rounded-full border-2 border-white shadow-lg flex items-center justify-center cursor-pointer transition-colors">
           <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
           </svg>
         </div>
       `
 
-      // Create popup
+      // Create popup with appropriate content
       const popup = new mapboxgl.Popup({
         offset: 25,
         closeButton: true,
         closeOnClick: false
       }).setHTML(`
         <div class="p-3 max-w-xs">
-          <h3 class="font-semibold text-lg mb-1">${market.name}</h3>
-          <p class="text-gray-600 text-sm mb-2">${market.city}, ${market.state}</p>
-          ${market.description ? `<p class="text-gray-700 text-sm mb-3 line-clamp-2">${market.description}</p>` : ''}
+          <h3 class="font-semibold text-lg mb-1">${item.name}</h3>
+          <p class="text-gray-600 text-sm mb-2">${item.city || ''}, ${item.state || ''}</p>
+          ${item.description ? `<p class="text-gray-700 text-sm mb-3 line-clamp-2">${item.description}</p>` : ''}
           <button 
-            onclick="window.location.href='/markets/${market.id}'" 
-            class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors"
+            onclick="window.location.href='/${searchMode}s/${item.id}'" 
+            class="${buttonColor} text-white px-3 py-1 rounded text-sm transition-colors"
           >
             View Details
           </button>
@@ -181,16 +213,18 @@ export default function InteractiveMap({ searchMode, searchQuery, className = ''
 
       // Add marker to map
       new mapboxgl.Marker(el)
-        .setLngLat([market.lng, market.lat])
+        .setLngLat([item.lng, item.lat])
         .setPopup(popup)
         .addTo(map.current!)
     })
+    
+    console.log(`Successfully added ${validItems} markers to map`)
 
     // Fit map to markers if there are any
-    if (marketsData.length > 0) {
-      const coordinates = marketsData
-        .filter(m => m.lat && m.lng)
-        .map(m => [m.lng, m.lat] as [number, number])
+    if (itemsData.length > 0) {
+      const coordinates = itemsData
+        .filter(item => item.lat && item.lng)
+        .map(item => [item.lng, item.lat] as [number, number])
       
       if (coordinates.length > 1) {
         const bounds = coordinates.reduce((bounds, coord) => {
