@@ -70,15 +70,14 @@ const InteractiveMap = forwardRef<InteractiveMapRef, InteractiveMapProps>(
   useImperativeHandle(ref, () => ({
     focusOnMarket: (lat: number, lng: number, name: string) => {
       if (map.current) {
-        // Fly to the market location
+        // Fly to the market location with much closer zoom for street-level detail
         map.current.flyTo({
           center: [lng, lat],
-          zoom: 15,
+          zoom: 18, // Much closer zoom - street level with clear street names
           duration: 2000
         })
         
-        // Highlight the marker (optional - could add a pulsing effect)
-        console.log(`Focused on ${name} at ${lat}, ${lng}`)
+        console.log(`Focused on ${name} at ${lat}, ${lng} - zoomed to street level`)
       }
     }
   }))
