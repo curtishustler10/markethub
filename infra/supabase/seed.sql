@@ -129,7 +129,10 @@ INSERT INTO markets (
     lng,
     status,
     amenities,
-    requirements
+    requirements,
+    is_verified,
+    verified_at,
+    verified_by
 ) VALUES (
     '44444444-4444-4444-4444-444444444444',
     '22222222-2222-2222-2222-222222222222',
@@ -144,7 +147,10 @@ INSERT INTO markets (
     144.9631,
     'live',
     '{"electricity": true, "water": true, "parking": true, "toilets": true}',
-    '{"required_docs": ["food_licence", "public_liability"], "minimum_insurance": 5000000}'
+    '{"required_docs": ["food_licence", "public_liability"], "minimum_insurance": 5000000}',
+    true,
+    NOW(),
+    '22222222-2222-2222-2222-222222222222'
 );
 
 -- Create sample market documents
@@ -205,7 +211,10 @@ INSERT INTO vendor_profiles (
     consent_sms,
     claimed_profile_id,
     claimed_at,
-    claimed_by
+    claimed_by,
+    is_verified,
+    verified_at,
+    verified_by
 ) VALUES (
     '33333333-3333-3333-3333-333333333333',
     'Fresh Farm Produce',
@@ -225,6 +234,9 @@ INSERT INTO vendor_profiles (
     true,
     false,
     '33333333-3333-3333-3333-333333333333',
+    NOW(),
+    '33333333-3333-3333-3333-333333333333',
+    true,
     NOW(),
     '33333333-3333-3333-3333-333333333333'
 );

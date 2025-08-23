@@ -75,6 +75,9 @@ CREATE TABLE IF NOT EXISTS markets (
     lng DOUBLE PRECISION,
     amenities JSONB DEFAULT '{}',
     requirements JSONB DEFAULT '{}',
+    is_verified BOOLEAN DEFAULT FALSE,
+    verified_at TIMESTAMPTZ,
+    verified_by UUID REFERENCES profiles(id),
     status market_status DEFAULT 'draft',
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -102,6 +105,9 @@ CREATE TABLE IF NOT EXISTS imported_vendors (
     email TEXT,
     phone TEXT,
     source TEXT,
+    is_verified BOOLEAN DEFAULT FALSE,
+    verified_at TIMESTAMPTZ,
+    verified_by UUID REFERENCES profiles(id),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -129,6 +135,9 @@ CREATE TABLE IF NOT EXISTS vendor_profiles (
     claimed_profile_id UUID REFERENCES profiles(id),
     claimed_at TIMESTAMPTZ,
     claimed_by UUID REFERENCES profiles(id),
+    is_verified BOOLEAN DEFAULT FALSE,
+    verified_at TIMESTAMPTZ,
+    verified_by UUID REFERENCES profiles(id),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );

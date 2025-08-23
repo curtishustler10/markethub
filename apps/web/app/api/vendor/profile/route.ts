@@ -71,7 +71,7 @@ export async function PUT(request: NextRequest) {
     // Check if profile exists
     const { data: existingProfile } = await supabase
       .from('vendor_profiles')
-      .select('vendor_id')
+      .select('vendor_id, claimed_profile_id, is_verified')
       .or(`vendor_id.eq.${profile.id},claimed_profile_id.eq.${profile.id}`)
       .single()
 
@@ -81,9 +81,18 @@ export async function PUT(request: NextRequest) {
       // Update existing profile
       const validatedData = updateVendorProfileSchema.parse(body)
       
+      const updates: any = { ...validatedData }
+
+      if (!existingProfile.is_verified && !existingProfile.claimed_profile_id) {
+        updates.claimed_profile_id = profile.id
+        updates.is_verified = true
+        updates.verified_at = new Date().toISOString()
+        updates.verified_by = profile.id
+      }
+
       const { data, error } = await supabase
         .from('vendor_profiles')
-        .update(validatedData)
+        .update(updates)
         .or(`vendor_id.eq.${profile.id},claimed_profile_id.eq.${profile.id}`)
         .select(`
           *,
@@ -115,7 +124,10 @@ export async function PUT(request: NextRequest) {
         .insert({
           ...validatedData,
           vendor_id: profile.id,
-          claimed_profile_id: profile.id
+          claimed_profile_id: profile.id,
+          is_verified: true,
+          verified_at: new Date().toISOString(),
+          verified_by: profile.id
         })
         .select(`
           *,
