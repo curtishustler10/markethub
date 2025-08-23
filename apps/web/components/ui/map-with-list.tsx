@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { MapPin, Store, User, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import InteractiveMap from './interactive-map'
+import InteractiveMap, { InteractiveMapRef } from './interactive-map'
 
 interface Market {
   id: string
@@ -26,6 +26,12 @@ interface Vendor {
   region: string
   products_summary?: string
   website?: string
+  lat: number
+  lng: number
+  city: string
+  state: string
+  phone?: string
+  email?: string
 }
 
 interface MapWithListProps {
@@ -34,11 +40,15 @@ interface MapWithListProps {
   className?: string
 }
 
+// Add ref to access the map instance
+interface MapRef extends InteractiveMapRef {}
+
 export default function MapWithList({ searchMode, searchQuery, className = '' }: MapWithListProps) {
   const [items, setItems] = useState<(Market | Vendor)[]>([])
   const [loading, setLoading] = useState(false)
   const [filteredItems, setFilteredItems] = useState<(Market | Vendor)[]>([])
   const [sortBy, setSortBy] = useState<'name' | 'location' | 'date'>('name')
+  const mapRef = useRef<MapRef>(null)
 
   useEffect(() => {
     fetchItems()
@@ -188,9 +198,14 @@ export default function MapWithList({ searchMode, searchQuery, className = '' }:
             variant="outline" 
             size="sm" 
             className="flex-1"
-            onClick={() => window.location.href = `/markets/${market.id}`}
+            onClick={() => {
+              // Focus map on this market
+              if (mapRef.current && market.lat && market.lng) {
+                mapRef.current.focusOnMarket(market.lat, market.lng, market.name)
+              }
+            }}
           >
-            View Details
+            Focus on Map
           </Button>
           <Button 
             size="sm" 
@@ -239,14 +254,29 @@ export default function MapWithList({ searchMode, searchQuery, className = '' }:
           )}
         </div>
 
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="w-full"
-          onClick={() => window.location.href = `/vendors/${vendor.id}`}
-        >
-          View Profile
-        </Button>
+        <div className="mt-3 flex gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex-1"
+            onClick={() => {
+              // Focus map on this vendor
+              if (mapRef.current && vendor.lat && vendor.lng) {
+                mapRef.current.focusOnMarket(vendor.lat, vendor.lng, vendor.business_name)
+              }
+            }}
+          >
+            Focus on Map
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex-1"
+            onClick={() => window.location.href = `/vendors/${vendor.id}`}
+          >
+            View Profile
+          </Button>
+        </div>
       </CardContent>
     </Card>
   )
@@ -258,6 +288,7 @@ export default function MapWithList({ searchMode, searchQuery, className = '' }:
         {/* Left Side - Map */}
         <div className="space-y-4">
           <InteractiveMap 
+            ref={mapRef}
             searchMode={searchMode}
             searchQuery={searchQuery}
             className="w-full h-full"

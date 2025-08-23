@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import mapboxgl from 'mapbox-gl'
 import { MapPin, Loader2, Layers } from 'lucide-react'
 
@@ -38,6 +38,11 @@ interface InteractiveMapProps {
   mapStyle?: keyof typeof MAP_STYLES
 }
 
+// Expose methods to parent component
+export interface InteractiveMapRef {
+  focusOnMarket: (lat: number, lng: number, name: string) => void
+}
+
 // Helper function to get the appropriate map style URL
 const getMapStyleUrl = (style: keyof typeof MAP_STYLES = 'osm_bright'): string => {
   const styleUrl = MAP_STYLES[style]
@@ -50,7 +55,8 @@ const getMapStyleUrl = (style: keyof typeof MAP_STYLES = 'osm_bright'): string =
   return styleUrl
 }
 
-export default function InteractiveMap({ searchMode, searchQuery, className = '', mapStyle = 'osm_bright' }: InteractiveMapProps) {
+const InteractiveMap = forwardRef<InteractiveMapRef, InteractiveMapProps>(
+  ({ searchMode, searchQuery, className = '', mapStyle = 'osm_bright' }, ref) => {
   const mapContainer = useRef<HTMLDivElement>(null)
   const map = useRef<mapboxgl.Map | null>(null)
   const [loading, setLoading] = useState(true)
@@ -59,6 +65,23 @@ export default function InteractiveMap({ searchMode, searchQuery, className = ''
   const [currentMapStyle, setCurrentMapStyle] = useState<keyof typeof MAP_STYLES>(mapStyle)
   const [showStyleSelector, setShowStyleSelector] = useState(false)
   const styleSelectorRef = useRef<HTMLDivElement>(null)
+
+  // Expose methods to parent component
+  useImperativeHandle(ref, () => ({
+    focusOnMarket: (lat: number, lng: number, name: string) => {
+      if (map.current) {
+        // Fly to the market location
+        map.current.flyTo({
+          center: [lng, lat],
+          zoom: 15,
+          duration: 2000
+        })
+        
+        // Highlight the marker (optional - could add a pulsing effect)
+        console.log(`Focused on ${name} at ${lat}, ${lng}`)
+      }
+    }
+  }))
 
   // Brisbane center coordinates
   const brisbaneCenter: [number, number] = [153.0260, -27.4698]
@@ -380,4 +403,6 @@ export default function InteractiveMap({ searchMode, searchQuery, className = ''
       </div>
     </div>
   )
-}
+})
+
+export default InteractiveMap
