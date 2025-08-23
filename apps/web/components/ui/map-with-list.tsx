@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { MapPin, Store, User, Search, Filter, Calendar, Star, MapPinIcon } from 'lucide-react'
+import { MapPin, Store, User, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -39,7 +39,6 @@ export default function MapWithList({ searchMode, searchQuery, className = '' }:
   const [loading, setLoading] = useState(false)
   const [filteredItems, setFilteredItems] = useState<(Market | Vendor)[]>([])
   const [sortBy, setSortBy] = useState<'name' | 'location' | 'date'>('name')
-  const [showMap, setShowMap] = useState(true)
 
   useEffect(() => {
     fetchItems()
@@ -254,76 +253,21 @@ export default function MapWithList({ searchMode, searchQuery, className = '' }:
 
   return (
     <div className={`${className}`}>
-      {/* Toggle between Map and List View */}
-      <div className="flex justify-center mb-6">
-        <div className="bg-gray-100 rounded-lg p-1">
-          <Button
-            variant={showMap ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setShowMap(true)}
-            className="rounded-md"
-          >
-            <MapPinIcon className="w-4 h-4 mr-2" />
-            Map View
-          </Button>
-          <Button
-            variant={!showMap ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setShowMap(false)}
-            className="rounded-md"
-          >
-            <Store className="w-4 h-4 mr-2" />
-            List View
-          </Button>
-        </div>
-      </div>
-
-      {showMap ? (
-        // Map View
+      {/* Side-by-side layout: Map on left, List on right */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[600px]">
+        {/* Left Side - Map */}
         <div className="space-y-4">
           <InteractiveMap 
             searchMode={searchMode}
             searchQuery={searchQuery}
-            className="w-full h-96"
+            className="w-full h-full"
           />
-          
-          {/* Quick Stats */}
-          <div className="bg-white rounded-lg p-4 shadow-sm border">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  {searchMode === 'market' ? (
-                    <Store className="w-5 h-5 text-green-600" />
-                  ) : (
-                    <User className="w-5 h-5 text-blue-600" />
-                  )}
-                  <span className="text-sm font-medium text-gray-700">
-                    {filteredItems.length} {searchMode === 'market' ? 'Markets' : 'Vendors'} Found
-                  </span>
-                </div>
-              </div>
-              
-              {/* Sort Options */}
-              <div className="flex items-center space-x-2">
-                <span className="text-xs text-gray-500">Sort by:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as 'name' | 'location' | 'date')}
-                  className="text-xs border rounded px-2 py-1"
-                >
-                  <option value="name">Name</option>
-                  <option value="location">Location</option>
-                  {searchMode === 'market' && <option value="date">Next Event</option>}
-                </select>
-              </div>
-            </div>
-          </div>
         </div>
-      ) : (
-        // List View
-        <div className="space-y-4">
+
+        {/* Right Side - List */}
+        <div className="space-y-4 overflow-y-auto">
           {/* List Header */}
-          <div className="bg-white rounded-lg p-4 shadow-sm border">
+          <div className="bg-white rounded-lg p-4 shadow-sm border sticky top-0 z-10">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 {searchMode === 'market' ? (
@@ -397,7 +341,7 @@ export default function MapWithList({ searchMode, searchQuery, className = '' }:
 
           {/* Items List */}
           {!loading && filteredItems.length > 0 && (
-            <div className="grid gap-4">
+            <div className="space-y-4">
               {sortedItems.map((item) => 
                 searchMode === 'market' 
                   ? renderMarketCard(item as Market)
@@ -406,7 +350,7 @@ export default function MapWithList({ searchMode, searchQuery, className = '' }:
             </div>
           )}
         </div>
-      )}
+      </div>
     </div>
   )
 }
