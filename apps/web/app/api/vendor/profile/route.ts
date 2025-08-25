@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { getCurrentProfile } from '@/lib/auth'
 import { createVendorProfileSchema, updateVendorProfileSchema } from 'shared'
 
@@ -16,6 +16,8 @@ export async function GET(request: NextRequest) {
     }
 
     const supabase = createClient()
+    const service = createServiceClient()
+    const service = createServiceClient()
     
     const { data: vendorProfile, error } = await supabase
       .from('vendor_profiles')
@@ -67,13 +69,14 @@ export async function PUT(request: NextRequest) {
     const body = await request.json()
     
     const supabase = createClient()
-    
+    const service = createServiceClient()
+
     // Check if profile exists
-    const { data: existingProfile } = await supabase
-      .from('vendor_profiles')
-      .select('vendor_id, claimed_profile_id, is_verified')
-      .or(`vendor_id.eq.${profile.id},claimed_profile_id.eq.${profile.id}`)
-      .single()
+        const { data: existingProfile } = await supabase
+        .from('vendor_profiles')
+        .select('vendor_id, claimed_profile_id, is_verified')
+        .or(`vendor_id.eq.${profile.id},claimed_profile_id.eq.${profile.id}`)
+        .single()
 
     let vendorProfile
     
@@ -90,7 +93,7 @@ export async function PUT(request: NextRequest) {
         updates.verified_by = profile.id
       }
 
-      const { data, error } = await supabase
+      const { data, error } = await service
         .from('vendor_profiles')
         .update(updates)
         .or(`vendor_id.eq.${profile.id},claimed_profile_id.eq.${profile.id}`)
@@ -119,7 +122,7 @@ export async function PUT(request: NextRequest) {
       // Create new profile
       const validatedData = createVendorProfileSchema.parse(body)
       
-      const { data, error } = await supabase
+      const { data, error } = await service
         .from('vendor_profiles')
         .insert({
           ...validatedData,

@@ -93,8 +93,8 @@ export default function CreateMarketPage() {
       // Convert coordinates to numbers if provided
       const marketData = {
         ...formData,
-        lat: formData.lat ? parseFloat(formData.lat) : null,
-        lng: formData.lng ? parseFloat(formData.lng) : null,
+        lat: formData.lat ? parseFloat(formData.lat) : undefined,
+        lng: formData.lng ? parseFloat(formData.lng) : undefined,
       }
 
       const response = await fetch('/api/markets', {

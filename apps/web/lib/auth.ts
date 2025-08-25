@@ -63,13 +63,17 @@ export async function createUserProfile(
 
 export async function signIn(email: string, password: string) {
   const supabase = createClient()
-  
+
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   })
-  
-  return { data, error }
+
+  if (error || !data.user) {
+    throw error ?? new Error('Invalid login credentials')
+  }
+
+  return { user: data.user, session: data.session }
 }
 
 export async function signUp(email: string, password: string, name: string, role: UserRole) {

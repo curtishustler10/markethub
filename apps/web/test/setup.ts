@@ -1,30 +1,31 @@
 import '@testing-library/jest-dom'
+import { vi } from 'vitest'
 
 // Mock Next.js router
-jest.mock('next/navigation', () => ({
+vi.mock('next/navigation', () => ({
   useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    prefetch: jest.fn(),
+    push: vi.fn(),
+    replace: vi.fn(),
+    prefetch: vi.fn(),
   }),
   useSearchParams: () => new URLSearchParams(),
   usePathname: () => '/',
 }))
 
 // Mock Supabase client
-jest.mock('@/lib/supabase/client', () => ({
+vi.mock('@/lib/supabase/client', () => ({
   createClient: () => ({
     auth: {
-      signUp: jest.fn(),
-      signInWithPassword: jest.fn(),
-      signInWithOtp: jest.fn(),
-      signOut: jest.fn(),
-      getUser: jest.fn(),
+      signUp: vi.fn(),
+      signInWithPassword: vi.fn(),
+      signInWithOtp: vi.fn(),
+      signOut: vi.fn(),
+      getUser: vi.fn(),
     },
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => ({
-          single: jest.fn(),
+    from: vi.fn(() => ({
+      select: vi.fn(() => ({
+        eq: vi.fn(() => ({
+          single: vi.fn(),
         })),
       })),
     })),
