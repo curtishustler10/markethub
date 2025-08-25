@@ -17,7 +17,6 @@ export async function GET(request: NextRequest) {
 
     const supabase = createClient()
     const service = createServiceClient()
-    const service = createServiceClient()
     
     const { data: vendorProfile, error } = await supabase
       .from('vendor_profiles')
