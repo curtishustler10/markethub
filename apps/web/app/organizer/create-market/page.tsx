@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useToast } from '@/components/ui/use-toast'
-import { ArrowLeft, MapPin, Calendar, Users, FileText } from 'lucide-react'
+import { ArrowLeft, MapPin, Calendar, Users, FileText, AlertCircle, ExternalLink } from 'lucide-react'
 import { DashboardShell } from '@/components/dashboard/dashboard-shell'
 import Link from 'next/link'
 
@@ -47,6 +47,12 @@ export default function CreateMarketPage() {
     }
   })
 
+  // Nearby markets state
+  const [nearbyMarkets, setNearbyMarkets] = useState([])
+  const [isLoadingNearby, setIsLoadingNearby] = useState(false)
+  const [showClaimModal, setShowClaimModal] = useState(false)
+  const [selectedMarket, setSelectedMarket] = useState(null)
+
   const australianStates = [
     { value: 'NSW', label: 'New South Wales' },
     { value: 'VIC', label: 'Victoria' },
@@ -83,6 +89,45 @@ export default function CreateMarketPage() {
         [requirement]: checked
       }
     }))
+  }
+
+  // Check for nearby unclaimed markets
+  const checkNearbyMarkets = useCallback(async (lat: number, lng: number) => {
+    if (!lat || !lng) return
+    
+    setIsLoadingNearby(true)
+    try {
+      const response = await fetch(`/api/markets/nearby-unclaimed?lat=${lat}&lng=${lng}&radius=5`)
+      const data = await response.json()
+      
+      if (response.ok && data.markets) {
+        setNearbyMarkets(data.markets)
+      } else {
+        setNearbyMarkets([])
+      }
+    } catch (error) {
+      console.error('Error fetching nearby markets:', error)
+      setNearbyMarkets([])
+    } finally {
+      setIsLoadingNearby(false)
+    }
+  }, [])
+
+  // Effect to check nearby markets when coordinates change
+  useEffect(() => {
+    const lat = parseFloat(formData.lat)
+    const lng = parseFloat(formData.lng)
+    
+    if (lat && lng) {
+      checkNearbyMarkets(lat, lng)
+    } else {
+      setNearbyMarkets([])
+    }
+  }, [formData.lat, formData.lng, checkNearbyMarkets])
+
+  const handleClaimMarket = (market: any) => {
+    setSelectedMarket(market)
+    setShowClaimModal(true)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -289,6 +334,59 @@ export default function CreateMarketPage() {
             </CardContent>
           </Card>
 
+          {/* Nearby Unclaimed Markets */}
+          {(nearbyMarkets.length > 0 || isLoadingNearby) && (
+            <Card className="border-orange-200 bg-orange-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-orange-800">
+                  <AlertCircle className="w-5 h-5" />
+                  Nearby Unclaimed Markets
+                </CardTitle>
+                <CardDescription className="text-orange-700">
+                  We found {nearbyMarkets.length} unclaimed market{nearbyMarkets.length !== 1 ? 's' : ''} within 5km of your location. 
+                  You can claim an existing market instead of creating a new one.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isLoadingNearby ? (
+                  <div className="text-center py-4 text-orange-600">
+                    Checking for nearby markets...
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {nearbyMarkets.map((market: any) => (
+                      <div key={market.id} className="flex items-start justify-between p-4 bg-white rounded-lg border border-orange-200">
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-gray-900">{market.name}</h4>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {market.address}, {market.city}, {market.state}
+                          </p>
+                          <p className="text-sm text-orange-600 mt-1">
+                            {market.distance?.toFixed(1)}km away
+                          </p>
+                          {market.description && (
+                            <p className="text-sm text-gray-500 mt-2 line-clamp-2">
+                              {market.description}
+                            </p>
+                          )}
+                        </div>
+                        <div className="ml-4 flex gap-2">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleClaimMarket(market)}
+                          >
+                            Claim Market
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           {/* Amenities */}
           <Card>
             <CardHeader>
@@ -371,7 +469,166 @@ export default function CreateMarketPage() {
             </Button>
           </div>
         </form>
+
+        {/* Claim Market Modal */}
+        {showClaimModal && selectedMarket && (
+          <ClaimMarketModal 
+            market={selectedMarket}
+            onClose={() => {
+              setShowClaimModal(false)
+              setSelectedMarket(null)
+            }}
+            onSuccess={() => {
+              setShowClaimModal(false)
+              setSelectedMarket(null)
+              toast({
+                title: "Claim submitted!",
+                description: "Your market claim request has been submitted for review.",
+              })
+            }}
+          />
+        )}
       </div>
     </DashboardShell>
+  )
+}
+
+// Simple claim modal component
+function ClaimMarketModal({ market, onClose, onSuccess }: {
+  market: any
+  onClose: () => void
+  onSuccess: () => void
+}) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [claimData, setClaimData] = useState({
+    businessName: '',
+    businessAddress: '',
+    contactPhone: '',
+    experience: '',
+    reason: '',
+  })
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch('/api/markets/claim', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          marketId: market.id,
+          ...claimData
+        }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to submit claim')
+      }
+
+      onSuccess()
+    } catch (error: any) {
+      console.error('Error submitting claim:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <Card>
+          <CardHeader>
+            <CardTitle>Claim Market: {market.name}</CardTitle>
+            <CardDescription>
+              Submit your request to claim ownership of this market. This will be reviewed by our admin team.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <h4 className="font-medium">Market Details</h4>
+                <p className="text-sm text-gray-600 mt-1">
+                  {market.address}, {market.city}, {market.state}
+                </p>
+                <p className="text-sm text-gray-500 mt-2">{market.description}</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="businessName">Business Name *</Label>
+                <Input
+                  id="businessName"
+                  value={claimData.businessName}
+                  onChange={(e) => setClaimData(prev => ({ ...prev, businessName: e.target.value }))}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="businessAddress">Business Address</Label>
+                <Input
+                  id="businessAddress"
+                  value={claimData.businessAddress}
+                  onChange={(e) => setClaimData(prev => ({ ...prev, businessAddress: e.target.value }))}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="contactPhone">Contact Phone</Label>
+                <Input
+                  id="contactPhone"
+                  type="tel"
+                  value={claimData.contactPhone}
+                  onChange={(e) => setClaimData(prev => ({ ...prev, contactPhone: e.target.value }))}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="experience">Market Management Experience</Label>
+                <Textarea
+                  id="experience"
+                  placeholder="Describe your experience with managing markets, events, or similar..."
+                  value={claimData.experience}
+                  onChange={(e) => setClaimData(prev => ({ ...prev, experience: e.target.value }))}
+                  rows={3}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="reason">Reason for Claiming *</Label>
+                <Textarea
+                  id="reason"
+                  placeholder="Why do you want to claim this market? What are your plans..."
+                  value={claimData.reason}
+                  onChange={(e) => setClaimData(prev => ({ ...prev, reason: e.target.value }))}
+                  rows={4}
+                  required
+                />
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onClose}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit Claim Request'}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   )
 }
