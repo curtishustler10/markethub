@@ -28,6 +28,7 @@ interface Market {
   lng: number
   city: string
   state: string
+  status: 'live' | 'draft'
   description?: string
 }
 
@@ -203,11 +204,29 @@ const InteractiveMap = forwardRef<InteractiveMapRef, InteractiveMapProps>(
         return
       }
 
+      // Double-check map is still available before creating marker
+      if (!map.current) {
+        console.warn('Map was destroyed while adding markers')
+        return
+      }
+
       validItems++
       
-      // Different colors for markets vs vendors
-      const markerColor = searchMode === 'market' ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'
-      const buttonColor = searchMode === 'market' ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'
+      // Different colors based on search mode and market status
+      let markerColor = 'bg-blue-600 hover:bg-blue-700' // default for vendors
+      let buttonColor = 'bg-blue-600 hover:bg-blue-700'
+      let statusBadge = ''
+      
+      if (searchMode === 'market') {
+        if (item.status === 'live') {
+          markerColor = 'bg-green-600 hover:bg-green-700'
+          buttonColor = 'bg-green-600 hover:bg-green-700'
+        } else if (item.status === 'draft') {
+          markerColor = 'bg-orange-500 hover:bg-orange-600'
+          buttonColor = 'bg-orange-500 hover:bg-orange-600'
+          statusBadge = '<span class="inline-block bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full mb-2">Available to Claim</span>'
+        }
+      }
 
       // Create marker element
       const el = document.createElement('div')
@@ -228,22 +247,27 @@ const InteractiveMap = forwardRef<InteractiveMapRef, InteractiveMapProps>(
       }).setHTML(`
         <div class="p-3 max-w-xs">
           <h3 class="font-semibold text-lg mb-1">${item.name}</h3>
+          ${statusBadge}
           <p class="text-gray-600 text-sm mb-2">${item.city || ''}, ${item.state || ''}</p>
           ${item.description ? `<p class="text-gray-700 text-sm mb-3 line-clamp-2">${item.description}</p>` : ''}
           <button 
             onclick="window.location.href='/${searchMode}s/${item.id}'" 
             class="${buttonColor} text-white px-3 py-1 rounded text-sm transition-colors"
           >
-            View Details
+            ${item.status === 'draft' ? 'Claim Market' : 'View Details'}
           </button>
         </div>
       `)
 
-      // Add marker to map
-      new mapboxgl.Marker(el)
-        .setLngLat([item.lng, item.lat])
-        .setPopup(popup)
-        .addTo(map.current!)
+      try {
+        // Add marker to map with error handling
+        new mapboxgl.Marker(el)
+          .setLngLat([item.lng, item.lat])
+          .setPopup(popup)
+          .addTo(map.current)
+      } catch (error) {
+        console.error('Error adding marker to map:', error)
+      }
     })
     
     console.log(`Successfully added ${validItems} markers to map`)

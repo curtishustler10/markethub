@@ -27,35 +27,29 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 export default function OrganizerMarketsPage() {
-  const [markets, setMarkets] = useState([
-    {
-      id: '1',
-      name: 'Brisbane Riverside Market',
-      slug: 'brisbane-riverside-market',
-      status: 'live',
-      city: 'Brisbane',
-      state: 'QLD',
-      description: 'Weekly farmers market by the river featuring local produce and artisan goods.',
-      applications: 12,
-      events: 4,
-      lastEvent: '2024-01-15'
-    },
-    {
-      id: '2', 
-      name: 'Northside Community Fair',
-      slug: 'northside-community-fair',
-      status: 'draft',
-      city: 'Brisbane',
-      state: 'QLD',
-      description: 'Monthly community market supporting local businesses and families.',
-      applications: 3,
-      events: 1,
-      lastEvent: '2024-01-08'
-    }
-  ])
-  
+  const [markets, setMarkets] = useState<any[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    loadMarkets()
+  }, [])
+
+  const loadMarkets = async () => {
+    try {
+      const response = await fetch('/api/organizer/markets')
+      if (response.ok) {
+        const data = await response.json()
+        setMarkets(data.markets || [])
+      } else {
+        console.error('Failed to load markets')
+      }
+    } catch (error) {
+      console.error('Error loading markets:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const filteredMarkets = markets.filter(market => 
     market.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -104,7 +98,24 @@ export default function OrganizerMarketsPage() {
         </div>
 
         {/* Markets Grid */}
-        {filteredMarkets.length === 0 ? (
+        {loading ? (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {[...Array(6)].map((_, i) => (
+              <Card key={i} className="animate-pulse">
+                <CardHeader>
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="h-3 bg-gray-200 rounded"></div>
+                    <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : filteredMarkets.length === 0 ? (
           <Card className="p-12">
             <div className="text-center space-y-4">
               <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto">
@@ -179,17 +190,17 @@ export default function OrganizerMarketsPage() {
                   
                   <div className="grid grid-cols-3 gap-4 mb-4">
                     <div className="text-center">
-                      <div className="text-xl font-semibold text-primary">{market.applications}</div>
+                      <div className="text-xl font-semibold text-primary">{market.stats?.totalApplications || 0}</div>
                       <div className="text-xs text-muted-foreground">Applications</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-xl font-semibold text-primary">{market.events}</div>
+                      <div className="text-xl font-semibold text-primary">{market.stats?.totalEvents || 0}</div>
                       <div className="text-xs text-muted-foreground">Events</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-xs text-muted-foreground">Last Event</div>
-                      <div className="text-sm font-medium">
-                        {new Date(market.lastEvent).toLocaleDateString()}
+                      <div className="text-xs text-muted-foreground">Status</div>
+                      <div className="text-sm font-medium capitalize">
+                        {market.status}
                       </div>
                     </div>
                   </div>
@@ -215,41 +226,47 @@ export default function OrganizerMarketsPage() {
         )}
 
         {/* Quick Stats */}
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <MapPin className="w-8 h-8 text-primary" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Total Markets</p>
-                  <p className="text-2xl font-bold">{markets.length}</p>
+        {!loading && markets.length > 0 && (
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center">
+                  <MapPin className="w-8 h-8 text-primary" />
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-muted-foreground">Total Markets</p>
+                    <p className="text-2xl font-bold">{markets.length}</p>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <Users className="w-8 h-8 text-primary" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Pending Applications</p>
-                  <p className="text-2xl font-bold">{markets.reduce((sum, m) => sum + m.applications, 0)}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center">
+                  <Users className="w-8 h-8 text-primary" />
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-muted-foreground">Total Applications</p>
+                    <p className="text-2xl font-bold">
+                      {markets.reduce((sum, m) => sum + (m.stats?.totalApplications || 0), 0)}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <Calendar className="w-8 h-8 text-primary" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Upcoming Events</p>
-                  <p className="text-2xl font-bold">{markets.reduce((sum, m) => sum + m.events, 0)}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center">
+                  <Calendar className="w-8 h-8 text-primary" />
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-muted-foreground">Total Events</p>
+                    <p className="text-2xl font-bold">
+                      {markets.reduce((sum, m) => sum + (m.stats?.totalEvents || 0), 0)}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </DashboardShell>
   )

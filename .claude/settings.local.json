@@ -12,7 +12,15 @@
       "Bash(npm run lint)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "WebFetch(domain:markethub-web.vercel.app)"
+      "WebFetch(domain:markethub-web.vercel.app)",
+      "WebFetch(domain:www.marketsandfairs.com.au)",
+      "Bash(chmod:*)",
+      "Bash(python3:*)",
+      "Bash(pip3 install:*)",
+      "Bash(timeout 30 python3:*)",
+      "Bash(cat:*)",
+      "Bash(psql:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []

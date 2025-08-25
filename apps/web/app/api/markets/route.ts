@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
           notes
         )
       `)
-      .eq('status', 'live')
+      .in('status', ['live', 'draft'])
 
     // Apply filters
     if (search) {

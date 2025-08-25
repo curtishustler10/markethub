@@ -154,7 +154,14 @@ export default function MarketsPage() {
                 <CardHeader>
                   <CardTitle className="flex items-start justify-between">
                     <span className="text-lg">{market.name}</span>
-                    <Badge variant="secondary">{market.state}</Badge>
+                    <div className="flex gap-2">
+                      {market.status === 'draft' && (
+                        <Badge variant="outline" className="text-orange-600 border-orange-200 bg-orange-50">
+                          Available to Claim
+                        </Badge>
+                      )}
+                      <Badge variant="secondary">{market.state}</Badge>
+                    </div>
                   </CardTitle>
                   <CardDescription className="flex items-center">
                     <MapPin className="w-4 h-4 mr-1" />
@@ -193,9 +200,15 @@ export default function MarketsPage() {
                     <Button asChild size="sm" className="flex-1">
                       <Link href={`/markets/${market.slug}`}>View Details</Link>
                     </Button>
-                    <Button asChild variant="outline" size="sm">
-                      <Link href="/auth/register?role=vendor">Apply</Link>
-                    </Button>
+                    {market.status === 'draft' ? (
+                      <Button asChild variant="outline" size="sm" className="border-orange-200 text-orange-600 hover:bg-orange-50">
+                        <Link href="/auth/register?role=market_organizer">Claim Market</Link>
+                      </Button>
+                    ) : (
+                      <Button asChild variant="outline" size="sm">
+                        <Link href="/auth/register?role=vendor">Apply</Link>
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>

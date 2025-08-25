@@ -11,8 +11,8 @@ require('dotenv').config({ path: '.env.local' })
 // Sample markets data
 const sampleMarkets = [
   {
-    id: 'market-001-southbank',
-    owner_id: 'market-org-001',
+    id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    owner_id: '11111111-1111-1111-1111-111111111111',
     name: 'South Bank Weekend Markets',
     slug: 'south-bank-weekend-markets',
     description: 'Brisbane\'s premier weekend market featuring local produce, artisan foods, and handmade crafts. Located in the heart of South Bank with river views.',
@@ -29,8 +29,8 @@ const sampleMarkets = [
     is_verified: true
   },
   {
-    id: 'market-002-westend',
-    owner_id: 'market-org-001',
+    id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+    owner_id: '11111111-1111-1111-1111-111111111111',
     name: 'West End Farmers Market',
     slug: 'west-end-farmers-market',
     description: 'A vibrant community market focusing on fresh local produce, organic foods, and sustainable products. Every Saturday morning.',
@@ -47,8 +47,8 @@ const sampleMarkets = [
     is_verified: true
   },
   {
-    id: 'market-003-goldcoast',
-    owner_id: 'market-org-002',
+    id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
+    owner_id: '22222222-2222-2222-2222-222222222222',
     name: 'Surfers Paradise Beachfront Market',
     slug: 'surfers-paradise-beachfront-market',
     description: 'Iconic beachfront market with stunning ocean views. Features food trucks, local crafts, and beach-themed products. Open Friday to Sunday.',
@@ -65,8 +65,8 @@ const sampleMarkets = [
     is_verified: true
   },
   {
-    id: 'market-004-browns-plains',
-    owner_id: 'market-org-003',
+    id: 'dddddddd-dddd-dddd-dddd-dddddddddddd',
+    owner_id: '33333333-3333-3333-3333-333333333333',
     name: 'Browns Plains Community Market',
     slug: 'browns-plains-community-market',
     description: 'Family-friendly community market serving the growing Browns Plains area. Focus on fresh produce, family meals, and local businesses.',
@@ -83,8 +83,8 @@ const sampleMarkets = [
     is_verified: true
   },
   {
-    id: 'market-005-northside',
-    owner_id: 'market-org-004',
+    id: 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee',
+    owner_id: '44444444-4444-4444-4444-444444444444',
     name: 'Northside Artisan Market',
     slug: 'northside-artisan-market',
     description: 'Boutique market specializing in handcrafted goods, gourmet foods, and unique local products. Perfect for specialty vendors.',
@@ -105,28 +105,28 @@ const sampleMarkets = [
 // Sample market organizers
 const marketOrganizers = [
   {
-    id: 'market-org-001',
+    id: '11111111-1111-1111-1111-111111111111',
     role: 'market_organizer',
     name: 'Brisbane Markets Collective',
     email: 'brisbane.markets@example.com',
     phone: '(07) 3000 1001'
   },
   {
-    id: 'market-org-002',
+    id: '22222222-2222-2222-2222-222222222222',
     role: 'market_organizer',
     name: 'Gold Coast Events Co',
     email: 'goldcoast.events@example.com',
     phone: '(07) 5000 2002'
   },
   {
-    id: 'market-org-003',
+    id: '33333333-3333-3333-3333-333333333333',
     role: 'market_organizer',
     name: 'Southside Market Group',
     email: 'southside.markets@example.com',
     phone: '(07) 3000 3003'
   },
   {
-    id: 'market-org-004',
+    id: '44444444-4444-4444-4444-444444444444',
     role: 'market_organizer',
     name: 'Northside Community Markets',
     email: 'northside.events@example.com',

@@ -23,58 +23,45 @@ import {
 import { DashboardShell } from '@/components/dashboard/dashboard-shell'
 
 export default function OrganizerApplicationsPage() {
-  const [applications, setApplications] = useState([
-    {
-      id: '1',
-      vendorName: 'Fresh Valley Produce',
-      vendorEmail: 'hello@freshvalley.com',
-      vendorPhone: '(07) 1234 5678',
-      marketName: 'Brisbane Riverside Market',
-      category: 'Fresh Produce',
-      status: 'submitted',
-      appliedAt: '2024-01-15T10:30:00Z',
-      message: 'We are a family-owned farm specializing in organic vegetables and seasonal fruits. We would love to bring fresh, local produce to your market.',
-      documents: ['food_licence', 'public_liability'],
-      siteSize: '6x3',
-      powerRequired: true
-    },
-    {
-      id: '2',
-      vendorName: 'Artisan Bread Co.',
-      vendorEmail: 'baker@artisanbread.com',
-      vendorPhone: '(07) 2345 6789',
-      marketName: 'Brisbane Riverside Market',
-      category: 'Baked Goods',
-      status: 'accepted',
-      appliedAt: '2024-01-12T14:20:00Z',
-      message: 'Traditional sourdough bakery with 15 years experience. All breads made with organic flour and traditional methods.',
-      documents: ['food_licence', 'public_liability'],
-      siteSize: '3x3',
-      powerRequired: false
-    },
-    {
-      id: '3',
-      vendorName: 'Garden Blooms',
-      vendorEmail: 'info@gardenblooms.com',
-      vendorPhone: '(07) 3456 7890',
-      marketName: 'Northside Community Fair',
-      category: 'Plants & Flowers',
-      status: 'refused',
-      appliedAt: '2024-01-10T09:15:00Z',
-      message: 'Local nursery specializing in native Australian plants and cut flowers.',
-      documents: ['public_liability'],
-      siteSize: '6x3',
-      powerRequired: false
-    }
-  ])
-  
+  const [applications, setApplications] = useState<any[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedTab, setSelectedTab] = useState('all')
+  const [loading, setLoading] = useState(true)
+  
+  useEffect(() => {
+    loadApplications()
+  }, [selectedTab])
+
+  const loadApplications = async () => {
+    try {
+      setLoading(true)
+      const params = new URLSearchParams()
+      if (selectedTab !== 'all') {
+        params.set('status', selectedTab)
+      }
+      
+      const response = await fetch(`/api/organizer/applications?${params}`)
+      if (response.ok) {
+        const data = await response.json()
+        setApplications(data.applications || [])
+      } else {
+        console.error('Failed to load applications')
+      }
+    } catch (error) {
+      console.error('Error loading applications:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
   
   const filteredApplications = applications.filter(app => {
-    const matchesSearch = app.vendorName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         app.marketName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         app.category.toLowerCase().includes(searchQuery.toLowerCase())
+    const vendorName = app.vendor?.name || ''
+    const marketName = app.market?.name || ''
+    const category = app.category || ''
+    
+    const matchesSearch = vendorName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         marketName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         category.toLowerCase().includes(searchQuery.toLowerCase())
     
     const matchesTab = selectedTab === 'all' || app.status === selectedTab
     
@@ -91,15 +78,36 @@ export default function OrganizerApplicationsPage() {
     }
   }
 
-  const handleDecision = async (applicationId: string, decision: 'accepted' | 'refused' | 'not_now') => {
-    setApplications(prev => 
-      prev.map(app => 
-        app.id === applicationId 
-          ? { ...app, status: decision }
-          : app
-      )
-    )
-    // TODO: Implement API call to update application status
+  const handleDecision = async (applicationId: string, decision: 'accepted' | 'refused' | 'not_now', message?: string) => {
+    try {
+      const response = await fetch(`/api/vendor-apps/${applicationId}/decision`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status: decision,
+          message: message || undefined
+        })
+      })
+
+      if (response.ok) {
+        // Update local state
+        setApplications(prev => 
+          prev.map(app => 
+            app.id === applicationId 
+              ? { ...app, status: decision, message, decided_at: new Date().toISOString() }
+              : app
+          )
+        )
+      } else {
+        console.error('Failed to update application status')
+        // TODO: Show error toast
+      }
+    } catch (error) {
+      console.error('Error updating application:', error)
+      // TODO: Show error toast
+    }
   }
 
   const getTabCounts = () => {
@@ -151,7 +159,29 @@ export default function OrganizerApplicationsPage() {
           </TabsList>
 
           <TabsContent value={selectedTab} className="space-y-4">
-            {filteredApplications.length === 0 ? (
+            {loading ? (
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <Card key={i} className="animate-pulse">
+                    <CardHeader>
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                        <div className="space-y-2 flex-1">
+                          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                          <div className="h-3 bg-gray-200 rounded w-1/3"></div>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div className="h-3 bg-gray-200 rounded"></div>
+                        <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : filteredApplications.length === 0 ? (
               <Card className="p-12">
                 <div className="text-center space-y-4">
                   <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto">
@@ -174,12 +204,12 @@ export default function OrganizerApplicationsPage() {
                         <div className="flex items-start gap-4">
                           <Avatar>
                             <AvatarFallback>
-                              {application.vendorName.split(' ').map(n => n[0]).join('')}
+                              {(application.vendor?.name || 'V').split(' ').map(n => n[0]).join('')}
                             </AvatarFallback>
                           </Avatar>
                           <div>
                             <CardTitle className="flex items-center gap-2">
-                              {application.vendorName}
+                              {application.vendor?.name || 'Unknown Vendor'}
                               <Badge className={getStatusColor(application.status)}>
                                 {application.status}
                               </Badge>
@@ -188,11 +218,11 @@ export default function OrganizerApplicationsPage() {
                               <div className="flex items-center gap-4 text-sm">
                                 <span className="flex items-center gap-1">
                                   <MapPin className="w-3 h-3" />
-                                  {application.marketName}
+                                  {application.market?.name || 'Unknown Market'}
                                 </span>
                                 <span className="flex items-center gap-1">
                                   <Calendar className="w-3 h-3" />
-                                  {new Date(application.appliedAt).toLocaleDateString()}
+                                  {new Date(application.created_at).toLocaleDateString()}
                                 </span>
                               </div>
                             </CardDescription>
@@ -235,23 +265,31 @@ export default function OrganizerApplicationsPage() {
                           <div className="text-sm text-muted-foreground space-y-1">
                             <div className="flex items-center gap-2">
                               <Mail className="w-3 h-3" />
-                              {application.vendorEmail}
+                              {application.vendor?.email || 'No email provided'}
                             </div>
-                            <div className="flex items-center gap-2">
-                              <Phone className="w-3 h-3" />
-                              {application.vendorPhone}
-                            </div>
+                            {application.vendor?.phone && (
+                              <div className="flex items-center gap-2">
+                                <Phone className="w-3 h-3" />
+                                {application.vendor.phone}
+                              </div>
+                            )}
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <h4 className="font-medium">Requirements</h4>
+                          <h4 className="font-medium">Application Details</h4>
                           <div className="flex flex-wrap gap-1">
-                            <Badge variant="outline">{application.category}</Badge>
-                            <Badge variant="outline">{application.siteSize} site</Badge>
-                            {application.powerRequired && (
+                            {application.category && (
+                              <Badge variant="outline">{application.category}</Badge>
+                            )}
+                            {application.stall_preferences?.size && (
+                              <Badge variant="outline">{application.stall_preferences.size} stall</Badge>
+                            )}
+                            {application.stall_preferences?.power_required && (
                               <Badge variant="outline">Power required</Badge>
                             )}
-                            <Badge variant="outline">{application.documents.length} docs</Badge>
+                            <Badge variant="outline" className="capitalize">
+                              {application.status}
+                            </Badge>
                           </div>
                         </div>
                       </div>
