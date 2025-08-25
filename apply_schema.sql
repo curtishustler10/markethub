@@ -83,6 +83,27 @@ CREATE TABLE IF NOT EXISTS markets (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Create imported_markets table
+CREATE TABLE IF NOT EXISTS imported_markets (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
+    description TEXT,
+    address TEXT,
+    city TEXT,
+    state TEXT,
+    postcode TEXT,
+    country TEXT DEFAULT 'Australia',
+    lat DOUBLE PRECISION,
+    lng DOUBLE PRECISION,
+    amenities JSONB DEFAULT '{}',
+    requirements JSONB DEFAULT '{}',
+    is_verified BOOLEAN DEFAULT FALSE,
+    claimed_by UUID REFERENCES profiles(id),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Create market_documents table
 CREATE TABLE IF NOT EXISTS market_documents (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -212,6 +233,8 @@ ON CONFLICT (key) DO NOTHING;
 CREATE INDEX IF NOT EXISTS idx_markets_owner_id ON markets(owner_id);
 CREATE INDEX IF NOT EXISTS idx_markets_status ON markets(status);
 CREATE INDEX IF NOT EXISTS idx_markets_location ON markets USING GIST(POINT(lng, lat));
+CREATE INDEX IF NOT EXISTS idx_imported_markets_slug ON imported_markets(slug);
+CREATE INDEX IF NOT EXISTS idx_imported_markets_location ON imported_markets USING GIST(POINT(lng, lat));
 CREATE INDEX IF NOT EXISTS idx_market_documents_market_id ON market_documents(market_id);
 CREATE INDEX IF NOT EXISTS idx_market_documents_expiry ON market_documents(expiry_date) WHERE expiry_date IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_vendor_documents_vendor_id ON vendor_documents(vendor_id);
@@ -231,6 +254,7 @@ $$ language 'plpgsql';
 
 CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON profiles FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_markets_updated_at BEFORE UPDATE ON markets FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_imported_markets_updated_at BEFORE UPDATE ON imported_markets FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_market_documents_updated_at BEFORE UPDATE ON market_documents FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_vendor_profiles_updated_at BEFORE UPDATE ON vendor_profiles FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_vendor_documents_updated_at BEFORE UPDATE ON vendor_documents FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
@@ -240,6 +264,7 @@ CREATE TRIGGER update_feature_flags_updated_at BEFORE UPDATE ON feature_flags FO
 -- Enable RLS on all tables
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE markets ENABLE ROW LEVEL SECURITY;
+ALTER TABLE imported_markets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE market_documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE imported_vendors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vendor_profiles ENABLE ROW LEVEL SECURITY;
@@ -288,6 +313,18 @@ CREATE POLICY "Market owners can update own markets" ON markets
     FOR UPDATE USING (owner_id = auth.uid());
 
 -- Note: Admin policy removed to prevent infinite recursion with profiles table
+
+-- Imported markets policies
+CREATE POLICY "Anyone can view imported markets" ON imported_markets
+    FOR SELECT USING (true);
+
+CREATE POLICY "Admins can manage imported markets" ON imported_markets
+    FOR ALL USING (
+        EXISTS (
+            SELECT 1 FROM profiles
+            WHERE id = auth.uid() AND role = 'admin'
+        )
+    );
 
 -- Market documents policies
 CREATE POLICY "Market owners can manage own market documents" ON market_documents

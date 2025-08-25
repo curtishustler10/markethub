@@ -41,6 +41,26 @@ export interface Market {
   events?: Event[];
 }
 
+export interface ImportedMarket {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  address: string | null;
+  city: string | null;
+  state: string | null;
+  postcode: string | null;
+  country: string;
+  lat: number | null;
+  lng: number | null;
+  amenities: Record<string, any>;
+  requirements: Record<string, any>;
+  is_verified: boolean;
+  claimed_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface MarketDocument {
   id: string;
   market_id: string;

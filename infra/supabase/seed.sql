@@ -153,6 +153,37 @@ INSERT INTO markets (
     '22222222-2222-2222-2222-222222222222'
 );
 
+-- Insert sample imported market
+INSERT INTO imported_markets (
+    id,
+    name,
+    slug,
+    description,
+    address,
+    city,
+    state,
+    postcode,
+    country,
+    lat,
+    lng,
+    amenities,
+    requirements
+) VALUES (
+    '55555555-5555-5555-5555-555555555555',
+    'Unclaimed Community Market',
+    'unclaimed-community-market',
+    'Sample imported market awaiting claim',
+    '1 Sample St',
+    'Sydney',
+    'NSW',
+    '2000',
+    'Australia',
+    -33.8688,
+    151.2093,
+    '{}',
+    '{}'
+);
+
 -- Create sample market documents
 INSERT INTO market_documents (
     market_id,
