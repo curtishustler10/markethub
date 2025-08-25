@@ -260,6 +260,12 @@ const InteractiveMap = forwardRef<InteractiveMapRef, InteractiveMapProps>(
       `)
 
       try {
+        // Double-check map is still available and properly initialized
+        if (!map.current || !map.current.getContainer()) {
+          console.warn('Map container not available for marker placement')
+          return
+        }
+
         // Add marker to map with error handling
         new mapboxgl.Marker(el)
           .setLngLat([item.lng, item.lat])
