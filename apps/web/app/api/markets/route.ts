@@ -42,13 +42,6 @@ export async function GET(request: NextRequest) {
           name,
           email,
           phone
-        ),
-        events (
-          id,
-          start_at,
-          end_at,
-          title,
-          description
         )
       `)
       .in('status', ['live', 'draft'])
