@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { getCurrentProfile } from '@/lib/auth'
 import { documentUploadSchema } from 'shared'
 import { z } from 'zod'
@@ -22,6 +22,7 @@ export async function POST(request: NextRequest) {
     }).parse(body)
 
     const supabase = createClient()
+    const service = createServiceClient()
     
     // Determine storage path based on document owner
     let storagePath: string
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
       isMarketDocument = true
 
       // Mark market as verified
-      const { error: marketVerifyError } = await supabase
+      const { error: marketVerifyError } = await service
         .from('markets')
         .update({
           is_verified: true,
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest) {
       storagePath = `vendor-docs/${profile.id}/${type}-${Date.now()}`
 
       // Mark vendor profile as verified
-      const { error: vendorVerifyError } = await supabase
+      const { error: vendorVerifyError } = await service
         .from('vendor_profiles')
         .update({
           is_verified: true,

@@ -41,41 +41,40 @@ function LoginForm() {
       console.log('🔓 Login successful, getting user profile...', { timestamp: new Date().toISOString() })
       const { data: { user } } = await supabase.auth.getUser()
       console.log('User data:', { id: user?.id, email: user?.email })
-      
-      if (user) {
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .maybeSingle()
 
-        console.log('Profile data:', { 
-          role: profile?.role, 
-          profileExists: !!profile,
-          profileData: profile,
-          error: profileError?.message,
-          errorCode: profileError?.code,
-          userId: user.id
-        })
+      if (!user) {
+        throw new Error('Invalid login credentials')
+      }
 
-        if (profile) {
-          // Redirect based on role if going to default route
-          let redirectPath = next
-          if (next === '/') {
-            redirectPath = profile.role === 'market_organizer' || profile.role === 'admin' 
-              ? '/organizer/dashboard' 
-              : '/vendor/browse'
-          }
-          console.log('Redirecting to:', redirectPath)
-          router.push(redirectPath)
-        } else {
-          console.log('No profile found - profile needs to be created during signup')
-          // For existing users without profiles, assume they are vendors
-          router.push('/vendor/browse')
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      console.log('Profile data:', {
+        role: profile?.role,
+        profileExists: !!profile,
+        profileData: profile,
+        error: profileError?.message,
+        errorCode: profileError?.code,
+        userId: user.id
+      })
+
+      if (profile) {
+        // Redirect based on role if going to default route
+        let redirectPath = next
+        if (next === '/') {
+          redirectPath = profile.role === 'market_organizer' || profile.role === 'admin'
+            ? '/organizer/dashboard'
+            : '/vendor/browse'
         }
+        console.log('Redirecting to:', redirectPath)
+        router.push(redirectPath)
       } else {
-        console.log('No user found, redirecting to:', next)
-        router.push(next)
+        console.log('No profile found - profile needs to be created during signup')
+        // For existing users without profiles, assume they are vendors
+        router.push('/vendor/browse')
       }
     } catch (error: any) {
       toast({
