@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
           email,
           phone
         )
-      `)
+      `, { count: 'exact' })
       .in('status', ['live', 'draft'])
 
     // Apply filters
