@@ -11,6 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { useToast } from '@/components/ui/use-toast'
 import { ArrowLeft, MapPin, Calendar, Users, FileText, AlertCircle, ExternalLink } from 'lucide-react'
 import { DashboardShell } from '@/components/dashboard/dashboard-shell'
+import { PlacesAutocomplete } from '@/components/ui/places-autocomplete'
 import Link from 'next/link'
 
 export default function CreateMarketPage() {
@@ -128,6 +129,20 @@ export default function CreateMarketPage() {
   const handleClaimMarket = (market: any) => {
     setSelectedMarket(market)
     setShowClaimModal(true)
+  }
+
+  // Handle Google Places selection
+  const handlePlaceSelect = (place: any) => {
+    setFormData(prev => ({
+      ...prev,
+      address: place.address,
+      city: place.city,
+      state: place.state,
+      postcode: place.postcode,
+      country: place.country || 'Australia',
+      lat: place.lat.toString(),
+      lng: place.lng.toString()
+    }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -264,13 +279,14 @@ export default function CreateMarketPage() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="address">Street Address *</Label>
-                <Input
-                  id="address"
-                  placeholder="e.g., 123 Main Street or Brisbane City Park"
+                <PlacesAutocomplete
                   value={formData.address}
-                  onChange={(e) => handleInputChange('address', e.target.value)}
-                  required
+                  onSelect={handlePlaceSelect}
+                  placeholder="Start typing an address (e.g., Brisbane City Park)..."
                 />
+                <p className="text-xs text-muted-foreground">
+                  💡 Tip: Address autocomplete will automatically fill in location details and coordinates.
+                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -278,9 +294,10 @@ export default function CreateMarketPage() {
                   <Label htmlFor="city">City/Suburb *</Label>
                   <Input
                     id="city"
-                    placeholder="e.g., Brisbane"
+                    placeholder="Auto-filled from address"
                     value={formData.city}
                     onChange={(e) => handleInputChange('city', e.target.value)}
+                    className="bg-gray-50"
                     required
                   />
                 </div>
@@ -288,9 +305,10 @@ export default function CreateMarketPage() {
                   <Label htmlFor="postcode">Postcode</Label>
                   <Input
                     id="postcode"
-                    placeholder="e.g., 4000"
+                    placeholder="Auto-filled from address"
                     value={formData.postcode}
                     onChange={(e) => handleInputChange('postcode', e.target.value)}
+                    className="bg-gray-50"
                   />
                 </div>
                 <div className="space-y-2">
@@ -299,6 +317,7 @@ export default function CreateMarketPage() {
                     id="country"
                     value={formData.country}
                     onChange={(e) => handleInputChange('country', e.target.value)}
+                    className="bg-gray-50"
                     disabled
                   />
                 </div>
@@ -306,30 +325,32 @@ export default function CreateMarketPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="lat">Latitude (Optional)</Label>
+                  <Label htmlFor="lat">Latitude</Label>
                   <Input
                     id="lat"
                     type="number"
                     step="any"
-                    placeholder="e.g., -27.4698"
+                    placeholder="Auto-filled from address"
                     value={formData.lat}
                     onChange={(e) => handleInputChange('lat', e.target.value)}
+                    className="bg-gray-50"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lng">Longitude (Optional)</Label>
+                  <Label htmlFor="lng">Longitude</Label>
                   <Input
                     id="lng"
                     type="number"
                     step="any"
-                    placeholder="e.g., 153.0251"
+                    placeholder="Auto-filled from address"
                     value={formData.lng}
                     onChange={(e) => handleInputChange('lng', e.target.value)}
+                    className="bg-gray-50"
                   />
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
-                💡 Tip: You can find coordinates by searching your location on Google Maps and clicking to get lat/lng coordinates.
+                💡 Tip: Coordinates are automatically determined from your selected address.
               </p>
             </CardContent>
           </Card>
